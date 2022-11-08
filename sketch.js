@@ -1,4 +1,4 @@
-const path = "/tiles/demo/";
+const path = "tiles/demo/";
 let tiles;
 let grid;
 const GRID_SIZE = 40;
@@ -37,7 +37,14 @@ function preload() {
 }
 
 function setup() {
-  grid = new Grid(GRID_SIZE, GRID_SIZE);
+  const BLANK = new Tile("BLANK", ["0", "0", "0", "0"]);
+  const DOWN = new Tile("DOWN", ["0", "1", "1", "1"]);
+  const LEFT = new Tile("LEFT", ["1", "0", "1", "1"]);
+  const UP = new Tile("UP", ["1", "1", "0", "1"]);
+  const RIGHT = new Tile("RIGHT", ["1", "1", "1", "0"]);
+
+  const options = [BLANK, DOWN, LEFT, UP, RIGHT];
+  grid = new Grid(GRID_SIZE, GRID_SIZE, options);
   grid.resetCallback = () => drawGrid(grid);
 
   createCanvas(innerWidth, innerHeight);

@@ -20,18 +20,12 @@ class Tile {
 }
 
 class Cell {
-  static BLANK = new Tile("BLANK", ["0", "0", "0", "0"]);
-  static DOWN = new Tile("DOWN", ["0", "1", "1", "1"]);
-  static LEFT = new Tile("LEFT", ["1", "0", "1", "1"]);
-  static UP = new Tile("UP", ["1", "1", "0", "1"]);
-  static RIGHT = new Tile("RIGHT", ["1", "1", "1", "0"]);
-
   constructor(x, y, grid) {
     this.x = x;
     this.y = y;
     this.grid = grid;
 
-    this.options = [Cell.BLANK, Cell.DOWN, Cell.LEFT, Cell.UP, Cell.RIGHT];
+    this.options = [...this.grid.options];
 
     this.neighbors = [];
   }
@@ -47,7 +41,7 @@ class Cell {
   reset() {
     delete this.state;
 
-    this.options = [Cell.BLANK, Cell.DOWN, Cell.LEFT, Cell.UP, Cell.RIGHT];
+    this.options = [...this.grid.options];
   }
 
   compare(key, option) {
@@ -85,9 +79,11 @@ class Cell {
 }
 
 class Grid {
-  constructor(width, height) {
+  constructor(width, height, options) {
     this.width = width;
     this.height = height;
+
+    this.options = options;
 
     this.cells = [];
 
