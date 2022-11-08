@@ -1,20 +1,62 @@
 const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 
-class Tile {}
+class Tile {
+  constructor(value, edges) {
+    this.value = value;
+    this.edges = {
+      up: edges[0],
+      right: edges[1],
+      down: edges[2],
+      left: edges[3],
+    };
+
+    // this.rotation = 0;
+  }
+
+  // rotate(amount) {
+  //   const edges = Object.values(this.edges);
+  //   let value;
+
+  //   for (let i = 0; i < amount; i++) {
+  //     edges.unshift(edges.pop());
+  //   }
+
+  //   if (this.value != "BLANK") {
+  //     const values = ["UP", "RIGHT", "DOWN", "LEFT"];
+
+  //     const index = (values.indexOf(this.value) + amount) % 4;
+
+  //     value = values[index];
+  //   }
+
+  //   const newTile = new Tile(value, edges);
+  //   newTile.rotation = amount;
+  //   return newTile;
+  // }
+}
 
 class Cell {
-  static BLANK = "BLANK";
-  static UP = "UP";
-  static DOWN = "DOWN";
-  static LEFT = "LEFT";
-  static RIGHT = "RIGHT";
+  static BLANK = new Tile("BLANK", [0, 0, 0, 0]);
+  static DOWN = new Tile("DOWN", [0, 1, 1, 1]);
+  static LEFT = new Tile("LEFT", [1, 0, 1, 1]);
+  static UP = new Tile("UP", [1, 1, 0, 1]);
+  static RIGHT = new Tile("RIGHT", [1, 1, 1, 0]);
 
   constructor(x, y, grid) {
     this.x = x;
     this.y = y;
     this.grid = grid;
 
-    this.options = [Cell.BLANK, Cell.UP, Cell.DOWN, Cell.LEFT, Cell.RIGHT];
+    this.options = [
+      Cell.BLANK,
+      Cell.DOWN,
+      // Cell.DOWN.rotate(1),
+      // Cell.DOWN.rotate(2),
+      // Cell.DOWN.rotate(3),
+      Cell.LEFT,
+      Cell.UP,
+      Cell.RIGHT,
+    ];
   }
 
   collapse() {
@@ -28,49 +70,33 @@ class Cell {
   update() {
     const nbrs = grid.getNeighbors(this);
 
-    Object.entries(nbrs).forEach(([key, value]) => {
-      let blanks = [Cell.BLANK];
-      let resBlanks = [Cell.BLANK];
-
-      // Define our valid options based on the location of the relevant cell
-      switch (key) {
-        case "north":
-          blanks.push(Cell.UP);
-          resBlanks.push(Cell.DOWN);
-          break;
-        case "south":
-          blanks.push(Cell.DOWN);
-          resBlanks.push(Cell.UP);
-          break;
-        case "east":
-          blanks.push(Cell.RIGHT);
-          resBlanks.push(Cell.LEFT);
-          break;
-        case "west":
-          blanks.push(Cell.LEFT);
-          resBlanks.push(Cell.RIGHT);
-          break;
+    this.options = this.options.filter((op) => {
+      if (nbrs.north?.state) {
+        if (op.edges.up != nbrs.north.state.edges.down) return false;
       }
 
-      // Reduce our available options to the valid options
-      if (value?.state) {
-        const matchBlank = blanks.includes(value.state);
-
-        this.options = this.options.filter((op) => {
-          const blank = resBlanks.includes(op);
-
-          return matchBlank ? blank : !blank;
-        });
+      if (nbrs.east?.state) {
+        if (op.edges.right != nbrs.east.state.edges.left) return false;
       }
 
-      // FIXME
-      // If there are no legal options, we have made a mistake
-      // For now, log that fact and set the tile to Blank
-      if (this.options.length == 0) {
-        console.log("broken tile");
-        this.options = [Cell.BLANK];
+      if (nbrs.south?.state) {
+        if (op.edges.down != nbrs.south.state.edges.up) return false;
       }
+
+      if (nbrs.west?.state) {
+        if (op.edges.left != nbrs.west.state.edges.right) return false;
+      }
+
+      return true;
     });
+
+    // FIXME
+    // If there are no legal options, we have made a mistake
+    // For now, log that fact and set the tile to Blank
+    if (this.options.length == 0) {
+      console.log("broken tile");
+      this.options = [Cell.BLANK];
+    }
   }
 }
 
