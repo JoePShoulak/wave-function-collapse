@@ -21,24 +21,31 @@ function drawCell(cell) {
 function preload() {
   images = {
     BLANK: loadImage(path + "blank.png"),
-    UP: loadImage(path + "up.png"),
     DOWN: loadImage(path + "down.png"),
-    LEFT: loadImage(path + "left.png"),
-    RIGHT: loadImage(path + "right.png"),
   };
 }
 
 function setup() {
+  Tile.rotateImage = (img, amount) => {
+    const w = img.width;
+    const h = img.height;
+
+    const newImg = createGraphics(w, h);
+
+    newImg.imageMode(CENTER);
+    newImg.translate(w / 2, h / 2);
+    newImg.rotate(HALF_PI * amount);
+    newImg.image(img, 0, 0);
+
+    return newImg;
+  };
+
   const BLANK = new Tile(images.BLANK, ["0", "0", "0", "0"]);
 
   const DOWN = new Tile(images.DOWN, ["0", "1", "1", "1"]);
   const LEFT = DOWN.rotate(1);
   const UP = DOWN.rotate(2);
   const RIGHT = DOWN.rotate(3);
-
-  LEFT.img = images.LEFT;
-  UP.img = images.UP;
-  RIGHT.img = images.RIGHT;
 
   const options = [BLANK, DOWN, LEFT, UP, RIGHT];
   grid = new Grid(GRID_SIZE, GRID_SIZE, options);

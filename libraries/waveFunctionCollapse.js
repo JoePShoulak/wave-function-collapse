@@ -5,6 +5,8 @@ const reverseString = (string) => string.split("").reverse().join("");
 const compareEdge = (myEdge, relEdge) => myEdge == reverseString(relEdge);
 
 class Tile {
+  static rotateImage() {}
+
   constructor(img, edges) {
     this.img = img;
 
@@ -23,9 +25,9 @@ class Tile {
       edges.unshift(edges.pop());
     }
 
-    // TODO Rotate the image too
+    const newImg = Tile.rotateImage(this.img, amount);
 
-    return new Tile(this.img, edges);
+    return new Tile(newImg, edges);
   }
 }
 
