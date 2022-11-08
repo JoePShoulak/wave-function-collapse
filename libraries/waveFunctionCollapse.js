@@ -1,5 +1,11 @@
 const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 
+const reverseString = (string) => {
+  return string.split("").reverse().join("");
+};
+
+const compareEdge = (myEdge, relEdge) => myEdge == reverseString(relEdge);
+
 class Tile {
   constructor(value, edges) {
     this.value = value;
@@ -14,11 +20,11 @@ class Tile {
 }
 
 class Cell {
-  static BLANK = new Tile("BLANK", [0, 0, 0, 0]);
-  static DOWN = new Tile("DOWN", [0, 1, 1, 1]);
-  static LEFT = new Tile("LEFT", [1, 0, 1, 1]);
-  static UP = new Tile("UP", [1, 1, 0, 1]);
-  static RIGHT = new Tile("RIGHT", [1, 1, 1, 0]);
+  static BLANK = new Tile("BLANK", ["0", "0", "0", "0"]);
+  static DOWN = new Tile("DOWN", ["0", "1", "1", "1"]);
+  static LEFT = new Tile("LEFT", ["1", "0", "1", "1"]);
+  static UP = new Tile("UP", ["1", "1", "0", "1"]);
+  static RIGHT = new Tile("RIGHT", ["1", "1", "1", "0"]);
 
   constructor(x, y, grid) {
     this.x = x;
@@ -26,14 +32,14 @@ class Cell {
     this.grid = grid;
 
     this.options = [Cell.BLANK, Cell.DOWN, Cell.LEFT, Cell.UP, Cell.RIGHT];
+
+    this.neighbors = [];
   }
 
   collapse() {
     this.state = randomFrom(this.options);
 
-    const nbrs = this.grid.getNeighbors(this);
-
-    Object.values(nbrs).forEach((cell) => cell.update());
+    Object.values(this.neighbors).forEach((cell) => cell.update());
 
     return this;
   }
@@ -44,25 +50,30 @@ class Cell {
     this.options = [Cell.BLANK, Cell.DOWN, Cell.LEFT, Cell.UP, Cell.RIGHT];
   }
 
+  compare(key, option) {
+    const oppEdge = {
+      up: "down",
+      down: "up",
+      left: "right",
+      right: "left",
+    };
+
+    if (this.neighbors[key]?.state) {
+      const myEdge = option.edges[key];
+      const relEdge = this.neighbors[key].state.edges[oppEdge[key]];
+
+      return compareEdge(myEdge, relEdge);
+    }
+
+    return true;
+  }
+
   update() {
-    const nbrs = grid.getNeighbors(this);
-
-    this.options = this.options.filter((op) => {
-      if (nbrs.north?.state) {
-        if (op.edges.up != nbrs.north.state.edges.down) return false;
-      }
-
-      if (nbrs.east?.state) {
-        if (op.edges.right != nbrs.east.state.edges.left) return false;
-      }
-
-      if (nbrs.south?.state) {
-        if (op.edges.down != nbrs.south.state.edges.up) return false;
-      }
-
-      if (nbrs.west?.state) {
-        if (op.edges.left != nbrs.west.state.edges.right) return false;
-      }
+    this.options = this.options.filter((option) => {
+      if (!this.compare("up", option)) return false;
+      if (!this.compare("right", option)) return false;
+      if (!this.compare("down", option)) return false;
+      if (!this.compare("left", option)) return false;
 
       return true;
     });
@@ -86,6 +97,10 @@ class Grid {
         this.cells[index] = new Cell(i, j, this);
       }
     }
+
+    this.cells.forEach((cell) => {
+      cell.neighbors = this.getNeighbors(cell);
+    });
   }
 
   get finished() {
@@ -115,10 +130,10 @@ class Grid {
     let flagBool = true;
 
     switch (flag) {
-      case "east":
+      case "right":
         flagBool = index % this.width != 0;
         break;
-      case "west":
+      case "left":
         flagBool = (index + 1) % this.width != 0;
         break;
     }
@@ -131,15 +146,15 @@ class Grid {
 
     const index = cell.x + cell.y * this.width;
 
-    const north = index - this.width;
-    const south = index + this.width;
-    const east = index + 1;
-    const west = index - 1;
+    const up = index - this.width;
+    const down = index + this.width;
+    const right = index + 1;
+    const left = index - 1;
 
-    if (this.validNeighbor(north)) nbrs.north = this.cells[north];
-    if (this.validNeighbor(south)) nbrs.south = this.cells[south];
-    if (this.validNeighbor(east, "east")) nbrs.east = this.cells[east];
-    if (this.validNeighbor(west, "west")) nbrs.west = this.cells[west];
+    if (this.validNeighbor(up)) nbrs.up = this.cells[up];
+    if (this.validNeighbor(down)) nbrs.down = this.cells[down];
+    if (this.validNeighbor(right, "right")) nbrs.right = this.cells[right];
+    if (this.validNeighbor(left, "left")) nbrs.left = this.cells[left];
 
     return nbrs;
   }
