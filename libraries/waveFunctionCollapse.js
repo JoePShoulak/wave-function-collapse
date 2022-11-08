@@ -32,13 +32,14 @@ class Tile {
 }
 
 class Cell {
+  static options = [];
+
   constructor(x, y, grid) {
     this.x = x;
     this.y = y;
     this.grid = grid;
 
-    this.options = [...this.grid.options];
-
+    this.options = [...Cell.options];
     this.neighbors = [];
   }
 
@@ -53,7 +54,7 @@ class Cell {
   reset() {
     delete this.state;
 
-    this.options = [...this.grid.options];
+    this.options = [...Cell.options];
   }
 
   compare(key, option) {
@@ -92,11 +93,9 @@ class Cell {
 }
 
 class Grid {
-  constructor(width, height, options) {
+  constructor(width, height) {
     this.width = width;
     this.height = height;
-
-    this.options = options;
 
     this.cells = [];
 
@@ -112,15 +111,15 @@ class Grid {
     });
   }
 
-  get finished() {
-    return this.allUncollapsed.length == 0;
-  }
-
   get allUncollapsed() {
     return this.cells.filter((cell) => cell.state == undefined);
   }
 
-  get oneUncollapsed() {
+  get finished() {
+    return this.allUncollapsed.length == 0;
+  }
+
+  get next() {
     // TODO Optimize this
     const allU = this.allUncollapsed;
 
@@ -169,14 +168,14 @@ class Grid {
     return nbrs;
   }
 
-  next() {
-    return this.oneUncollapsed?.collapse();
+  advance() {
+    return this.next?.collapse();
   }
 
   resetCallback() {}
 
   reset() {
     this.cells.forEach((cell) => cell.reset());
-    this.resetCallback();
+    this.resetCallback(this);
   }
 }

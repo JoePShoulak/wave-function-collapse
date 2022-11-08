@@ -1,7 +1,7 @@
+const GRID_SIZE = 40;
 const path = "tiles/demo/";
 let images;
 let grid;
-const GRID_SIZE = 40;
 
 function drawGrid(grid) {
   grid.cells.forEach((cell) => drawCell(cell));
@@ -41,15 +41,16 @@ function setup() {
   };
 
   const BLANK = new Tile(images.BLANK, ["0", "0", "0", "0"]);
+  Cell.options.push(BLANK);
 
   const DOWN = new Tile(images.DOWN, ["0", "1", "1", "1"]);
-  const LEFT = DOWN.rotate(1);
-  const UP = DOWN.rotate(2);
-  const RIGHT = DOWN.rotate(3);
+  Cell.options.push(DOWN);
+  Cell.options.push(DOWN.rotate(1));
+  Cell.options.push(DOWN.rotate(2));
+  Cell.options.push(DOWN.rotate(3));
 
-  const options = [BLANK, DOWN, LEFT, UP, RIGHT];
-  grid = new Grid(GRID_SIZE, GRID_SIZE, options);
-  grid.resetCallback = () => drawGrid(grid);
+  grid = new Grid(GRID_SIZE, GRID_SIZE);
+  grid.resetCallback = (g) => drawGrid(g);
 
   createCanvas(innerWidth, innerHeight);
   fill("black");
@@ -58,7 +59,7 @@ function setup() {
 }
 
 function draw() {
-  const newCell = grid.next();
+  const newCell = grid.advance();
   drawCell(newCell);
 
   if (grid.finished) noLoop();
