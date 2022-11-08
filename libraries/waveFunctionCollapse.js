@@ -1,14 +1,12 @@
 const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 
-const reverseString = (string) => {
-  return string.split("").reverse().join("");
-};
+const reverseString = (string) => string.split("").reverse().join("");
 
 const compareEdge = (myEdge, relEdge) => myEdge == reverseString(relEdge);
 
 class Tile {
-  constructor(value, edges) {
-    this.value = value;
+  constructor(img, edges) {
+    this.img = img;
 
     this.edges = {
       up: edges[0],
@@ -16,6 +14,18 @@ class Tile {
       down: edges[2],
       left: edges[3],
     };
+  }
+
+  rotate(amount) {
+    const edges = [...Object.values(this.edges)];
+
+    for (let i = 0; i < amount; i++) {
+      edges.unshift(edges.pop());
+    }
+
+    // TODO Rotate the image too
+
+    return new Tile(this.img, edges);
   }
 }
 
