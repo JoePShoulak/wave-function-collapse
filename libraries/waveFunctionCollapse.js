@@ -1,5 +1,7 @@
 const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 
+class Tile {}
+
 class Cell {
   static BLANK = "BLANK";
   static UP = "UP";
@@ -20,9 +22,7 @@ class Cell {
 
     const nbrs = grid.getNeighbors(this);
 
-    Object.values(nbrs).forEach((cell) => {
-      if (cell) cell.update();
-    });
+    Object.values(nbrs).forEach((cell) => cell.update());
   }
 
   update() {
@@ -30,45 +30,42 @@ class Cell {
 
     Object.entries(nbrs).forEach(([key, value]) => {
       let blanks = [Cell.BLANK];
-      let responseBlanks = [Cell.BLANK];
+      let resBlanks = [Cell.BLANK];
 
-      // Depending on where the neighbor is, define inputs and responses
+      // Define our valid options based on the location of the relevant cell
       switch (key) {
         case "north":
           blanks.push(Cell.UP);
-          responseBlanks.push(Cell.DOWN);
+          resBlanks.push(Cell.DOWN);
           break;
         case "south":
           blanks.push(Cell.DOWN);
-          responseBlanks.push(Cell.UP);
+          resBlanks.push(Cell.UP);
           break;
         case "east":
           blanks.push(Cell.RIGHT);
-          responseBlanks.push(Cell.LEFT);
+          resBlanks.push(Cell.LEFT);
           break;
         case "west":
           blanks.push(Cell.LEFT);
-          responseBlanks.push(Cell.RIGHT);
+          resBlanks.push(Cell.RIGHT);
           break;
       }
 
-      // If the tile has a state...
+      // Reduce our available options to the valid options
       if (value?.state) {
-        // If it's a blank in this context...
-        if (blanks.includes(value.state)) {
-          // Set our options to valid responses (responseBlanks)
-          this.options = this.options.filter((op) =>
-            responseBlanks.includes(op)
-          );
-        } else {
-          // If it's not a blank in this context...
-          // Set our options to valid responses (!responseBlanks)
-          this.options = this.options.filter(
-            (op) => !responseBlanks.includes(op)
-          );
-        }
+        const matchBlank = blanks.includes(value.state);
+
+        this.options = this.options.filter((op) => {
+          const blank = resBlanks.includes(op);
+
+          return matchBlank ? blank : !blank;
+        });
       }
 
+      // FIXME
+      // If there are no legal options, we have made a mistake
+      // For now, log that fact and set the tile to Blank
       if (this.options.length == 0) {
         console.log("broken tile");
         this.options = [Cell.BLANK];
@@ -117,8 +114,8 @@ class Grid {
     return randomFrom(allMin);
   }
 
-  validIndex(index, flag = "") {
-    let flagBool;
+  validNeighbor(index, flag = "") {
+    let flagBool = true;
 
     switch (flag) {
       case "east":
@@ -126,10 +123,6 @@ class Grid {
         break;
       case "west":
         flagBool = (index + 1) % this.width != 0;
-        break;
-
-      default:
-        flagBool = true;
         break;
     }
 
@@ -146,10 +139,10 @@ class Grid {
     const east = index + 1;
     const west = index - 1;
 
-    nbrs.north = this.validIndex(north) ? this.cells[north] : null;
-    nbrs.south = this.validIndex(south) ? this.cells[south] : null;
-    nbrs.east = this.validIndex(east, "east") ? this.cells[east] : null;
-    nbrs.west = this.validIndex(west, "west") ? this.cells[west] : null;
+    if (this.validNeighbor(north)) nbrs.north = this.cells[north];
+    if (this.validNeighbor(south)) nbrs.south = this.cells[south];
+    if (this.validNeighbor(east, "east")) nbrs.east = this.cells[east];
+    if (this.validNeighbor(west, "west")) nbrs.west = this.cells[west];
 
     return nbrs;
   }
