@@ -41,16 +41,7 @@ class Cell {
   reset() {
     delete this.state;
 
-    this.options = [
-      Cell.BLANK,
-      Cell.DOWN,
-      // Cell.DOWN.rotate(1),
-      // Cell.DOWN.rotate(2),
-      // Cell.DOWN.rotate(3),
-      Cell.LEFT,
-      Cell.UP,
-      Cell.RIGHT,
-    ];
+    this.options = [Cell.BLANK, Cell.DOWN, Cell.LEFT, Cell.UP, Cell.RIGHT];
   }
 
   update() {
