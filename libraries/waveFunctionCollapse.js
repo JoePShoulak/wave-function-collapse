@@ -3,36 +3,14 @@ const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 class Tile {
   constructor(value, edges) {
     this.value = value;
+
     this.edges = {
       up: edges[0],
       right: edges[1],
       down: edges[2],
       left: edges[3],
     };
-
-    // this.rotation = 0;
   }
-
-  // rotate(amount) {
-  //   const edges = Object.values(this.edges);
-  //   let value;
-
-  //   for (let i = 0; i < amount; i++) {
-  //     edges.unshift(edges.pop());
-  //   }
-
-  //   if (this.value != "BLANK") {
-  //     const values = ["UP", "RIGHT", "DOWN", "LEFT"];
-
-  //     const index = (values.indexOf(this.value) + amount) % 4;
-
-  //     value = values[index];
-  //   }
-
-  //   const newTile = new Tile(value, edges);
-  //   newTile.rotation = amount;
-  //   return newTile;
-  // }
 }
 
 class Cell {
@@ -47,24 +25,17 @@ class Cell {
     this.y = y;
     this.grid = grid;
 
-    this.options = [
-      Cell.BLANK,
-      Cell.DOWN,
-      // Cell.DOWN.rotate(1),
-      // Cell.DOWN.rotate(2),
-      // Cell.DOWN.rotate(3),
-      Cell.LEFT,
-      Cell.UP,
-      Cell.RIGHT,
-    ];
+    this.options = [Cell.BLANK, Cell.DOWN, Cell.LEFT, Cell.UP, Cell.RIGHT];
   }
 
   collapse() {
     this.state = randomFrom(this.options);
 
-    const nbrs = grid.getNeighbors(this);
+    const nbrs = this.grid.getNeighbors(this);
 
     Object.values(nbrs).forEach((cell) => cell.update());
+
+    return this;
   }
 
   reset() {
@@ -105,18 +76,8 @@ class Cell {
       return true;
     });
 
-    // FIXME
-    // If there are no legal options, we have made a mistake
-    // For now, log that fact and set the tile to Blank
     if (this.options.length == 0) {
-      console.log("Found error");
-      this.reset();
-
-      const nbrs = grid.getNeighbors(this);
-
-      Object.values(nbrs).forEach((cell) => {
-        if (cell.state) cell.reset();
-      });
+      this.grid.reset();
     }
   }
 }
@@ -136,16 +97,14 @@ class Grid {
     }
   }
 
+  get finished() {
+    return this.allUncollapsed.length == 0;
+  }
+
   get allUncollapsed() {
     return this.cells.filter((cell) => cell.state == undefined);
   }
 
-  /**
-   * This function asks for all the uncollapsed cells,
-   * finds the minnimuim entropy among them (shortest options length),
-   * filters for all uncollapsed with that minnimum entropy,
-   * and then returns a matching element of that filtered array.
-   */
   get oneUncollapsed() {
     const allU = this.allUncollapsed;
 
@@ -192,5 +151,16 @@ class Grid {
     if (this.validNeighbor(west, "west")) nbrs.west = this.cells[west];
 
     return nbrs;
+  }
+
+  advance() {
+    return this.oneUncollapsed?.collapse();
+  }
+
+  resetCallback() {}
+
+  reset() {
+    this.cells.forEach((cell) => cell.reset());
+    this.resetCallback();
   }
 }
