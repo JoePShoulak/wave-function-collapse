@@ -1,7 +1,7 @@
 const path = "/tiles/demo/";
 let tiles;
 let grid;
-const GRID_SIZE = 10;
+const GRID_SIZE = 20;
 
 function preload() {
   tiles = {
@@ -23,7 +23,6 @@ function drawGrid(grid) {
       if (value == "BLANK") {
         image(tiles.BLANK, cell.x * w, cell.y * h, w, h);
       } else {
-        // FIXME
         // const img = tiles.DOWN;
         // const newImg = createGraphics(w, h);
         // newImg.imageMode(CENTER);
