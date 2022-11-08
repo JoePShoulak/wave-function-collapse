@@ -67,6 +67,21 @@ class Cell {
     Object.values(nbrs).forEach((cell) => cell.update());
   }
 
+  reset() {
+    delete this.state;
+
+    this.options = [
+      Cell.BLANK,
+      Cell.DOWN,
+      // Cell.DOWN.rotate(1),
+      // Cell.DOWN.rotate(2),
+      // Cell.DOWN.rotate(3),
+      Cell.LEFT,
+      Cell.UP,
+      Cell.RIGHT,
+    ];
+  }
+
   update() {
     const nbrs = grid.getNeighbors(this);
 
@@ -94,8 +109,14 @@ class Cell {
     // If there are no legal options, we have made a mistake
     // For now, log that fact and set the tile to Blank
     if (this.options.length == 0) {
-      console.log("broken tile");
-      this.options = [Cell.BLANK];
+      console.log("Found error");
+      this.reset();
+
+      const nbrs = grid.getNeighbors(this);
+
+      Object.values(nbrs).forEach((cell) => {
+        if (cell.state) cell.reset();
+      });
     }
   }
 }

@@ -1,7 +1,7 @@
 const path = "/tiles/demo/";
 let tiles;
 let grid;
-const GRID_SIZE = 20;
+const GRID_SIZE = 50;
 
 function preload() {
   tiles = {
