@@ -11,14 +11,11 @@ function drawCell(cell) {
   const w = width / grid.width;
   const h = height / grid.height;
 
+  const img = cell.state?.img;
   const pos = [cell.x * w, cell.y * h];
   const size = [w, h];
 
-  if (cell.state) {
-    image(cell.state.img, ...pos, ...size);
-  } else {
-    rect(...pos, ...size);
-  }
+  img ? image(img, ...pos, ...size) : rect(...pos, ...size);
 }
 
 function preload() {
@@ -54,11 +51,8 @@ function setup() {
 }
 
 function draw() {
-  const newCell = grid.advance();
+  const newCell = grid.next();
   drawCell(newCell);
 
-  if (grid.finished) {
-    noLoop();
-    console.log("Done!");
-  }
+  if (grid.finished) noLoop();
 }

@@ -82,6 +82,7 @@ class Cell {
       return true;
     });
 
+    // TODO Optimize this
     if (this.options.length == 0) {
       this.grid.reset();
     }
@@ -118,14 +119,15 @@ class Grid {
   }
 
   get oneUncollapsed() {
+    // TODO Optimize this
     const allU = this.allUncollapsed;
 
-    const minE = allU.reduce(
-      (acc, val) => {
-        return acc < val.options.length ? acc : val.options.length;
-      },
-      allU[0] ? allU[0].options.length : null
-    );
+    const rSeed = allU[0]?.options?.length;
+    const minE = allU.reduce((acc, val) => {
+      const ops = val.options.length;
+
+      return acc < ops ? acc : ops;
+    }, rSeed);
 
     const allMin = allU.filter((cell) => cell.options.length == minE);
 
@@ -165,7 +167,7 @@ class Grid {
     return nbrs;
   }
 
-  advance() {
+  next() {
     return this.oneUncollapsed?.collapse();
   }
 
