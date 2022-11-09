@@ -18,6 +18,34 @@ class Tile {
     };
   }
 
+  allRotations() {
+    let amount;
+    let rotations = [this];
+
+    if (
+      // All edges are the same
+      this.edges.up == this.edges.right &&
+      this.edges.left == this.edges.right &&
+      this.edges.down == this.edges.right
+    )
+      amount = 0;
+    else if (
+      // Opposite edges are the same
+      this.edges.up == this.edges.down &&
+      this.edges.left == this.edges.right
+    ) {
+      amount = 2;
+    } else {
+      amount = 4;
+    }
+
+    for (let i = 1; i < amount; i++) {
+      rotations.push(this.rotate(i));
+    }
+
+    return rotations;
+  }
+
   rotate(amount) {
     const edges = [...Object.values(this.edges)];
 
@@ -77,10 +105,11 @@ class Cell {
 
   update() {
     this.options = this.options.filter((option) => {
-      if (!this.compare("up", option)) return false;
-      if (!this.compare("right", option)) return false;
-      if (!this.compare("down", option)) return false;
-      if (!this.compare("left", option)) return false;
+      const opts = ["up", "down", "left", "right"];
+
+      for (let i = 0; i < opts.length; i++) {
+        if (!this.compare(opts[i], option)) return false;
+      }
 
       return true;
     });
