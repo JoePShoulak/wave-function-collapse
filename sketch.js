@@ -42,6 +42,8 @@ function setup() {
 
   grid = new Grid(GRID_SIZE, GRID_SIZE);
 
+  Cell.resetCallback = (cell) => drawCell(cell);
+
   createCanvas(innerWidth, innerHeight);
   fill("black");
   background("black");

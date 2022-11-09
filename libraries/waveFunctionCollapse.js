@@ -169,6 +169,7 @@ class Cell {
     delete this.state;
     this.options = [...Cell.options];
 
+    Cell.resetCallback(this);
     this.grid.uncollapsed.push(this);
   }
 
