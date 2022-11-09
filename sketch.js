@@ -1,6 +1,5 @@
 /* == VARIABLES == */
 const GRID_SIZE = 40; // 20 solves rather easily
-const path = "tiles/circuit/";
 const tiles = [];
 let imgs;
 let grid;
@@ -18,7 +17,10 @@ function drawCell(cell) {
 
 /* == MAIN FUNCTIONS == */
 function preload() {
+  const path = "tiles/circuit/";
+
   imgs = [
+    // Circuit
     loadImage(path + "0.png"),
     loadImage(path + "1.png"),
     loadImage(path + "2.png"),
@@ -32,15 +34,19 @@ function preload() {
     loadImage(path + "10.png"),
     loadImage(path + "11.png"),
     loadImage(path + "12.png"),
+
+    // Demo
+    // loadImage(path + "blank.png"),
+    // loadImage(path + "up.png"),
   ];
 }
 
 function setup() {
-  imgs.forEach((img) => tiles.push(new Tile(img)));
-
-  tiles.forEach((tile) => {
-    tile.allRotations().forEach((rot) => Cell.options.push(rot));
-  });
+  imgs
+    .map((img) => new Tile(img))
+    .forEach((tile) => {
+      tile.allRotations().forEach((rot) => Cell.options.push(rot));
+    });
 
   grid = new Grid(GRID_SIZE, GRID_SIZE);
 

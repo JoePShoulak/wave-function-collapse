@@ -36,12 +36,15 @@ const rotateImg = (img, amount) => {
   return newImg;
 };
 
+const DIRECTIONS = ["up", "down", "left", "right"];
+
 /* == TILE CLASS == */
 class Tile {
   static colors = {};
 
   static addColor(color) {
     color = rgbToHex(...color);
+
     if (Tile.colors[color] == undefined) {
       const iterator = Object.keys(Tile.colors).length;
       Tile.colors[color] = String.fromCharCode(iterator);
@@ -54,12 +57,8 @@ class Tile {
     this.img = img;
     this.img.loadPixels();
 
-    this.edges = {
-      up: this.edgeFromImg("up"),
-      right: this.edgeFromImg("right"),
-      down: this.edgeFromImg("down"),
-      left: this.edgeFromImg("left"),
-    };
+    this.edges = {};
+    DIRECTIONS.forEach((dir) => (this.edges[dir] = this.edgeFromImg(dir)));
   }
 
   edgeFromImg(dir) {
@@ -99,7 +98,7 @@ class Tile {
 
   allRotations() {
     let amount;
-    let rotations = [this];
+    let rotations = [];
 
     if (
       // All edges are the same
@@ -118,7 +117,7 @@ class Tile {
       amount = 4;
     }
 
-    for (let i = 1; i < amount; i++) {
+    for (let i = 0; i < amount; i++) {
       rotations.push(this.rotate(i));
     }
 
@@ -191,10 +190,8 @@ class Cell {
 
   update() {
     this.options = this.options.filter((option) => {
-      const opts = ["up", "down", "left", "right"];
-
-      for (let i = 0; i < opts.length; i++) {
-        if (!this.compare(opts[i], option)) return false;
+      for (let i = 0; i < DIRECTIONS.length; i++) {
+        if (!this.compare(DIRECTIONS[i], option)) return false;
       }
 
       return true;
@@ -238,7 +235,7 @@ class Grid {
     // TODO Optimize this
     const allU = this.uncollapsed;
 
-    const rSeed = allU[0]?.options?.length;
+    const rSeed = allU[0]?.options.length;
     const minE = allU.reduce((acc, val) => {
       const ops = val.options.length;
 
