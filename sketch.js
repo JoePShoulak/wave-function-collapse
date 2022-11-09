@@ -1,4 +1,4 @@
-const GRID_SIZE = 20; // 20 solves rather easily
+const GRID_SIZE = 100; // 20 solves rather easily
 const path = "tiles/circuit/";
 let imgs;
 let grid;
@@ -91,7 +91,10 @@ function setup() {
 
 function draw() {
   const newCell = grid.advance();
-  drawCell(newCell);
+  // drawCell(newCell);
 
-  if (grid.finished) noLoop();
+  drawGrid(grid);
+  if (grid.finished) {
+    noLoop();
+  }
 }

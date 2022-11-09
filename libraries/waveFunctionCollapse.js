@@ -124,7 +124,11 @@ class Cell {
 
     // TODO Optimize this
     if (this.options.length == 0) {
-      this.grid.reset();
+      // this.grid.reset();
+
+      this.reset();
+
+      Object.values(this.neighbors).forEach((cell) => cell.reset());
     }
   }
 }
