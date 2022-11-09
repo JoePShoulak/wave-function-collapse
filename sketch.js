@@ -1,6 +1,5 @@
 /* == VARIABLES == */
-const GRID_SIZE = 40; // 20 solves rather easily
-const tiles = [];
+const GRID_SIZE = 40; // 40 looks good deployed
 let imgs;
 let grid;
 
@@ -15,30 +14,23 @@ function drawCell(cell) {
   img ? image(img, ...pos, ...size) : rect(...pos, ...size);
 }
 
+const loadAllImages = (folder, number) => {
+  const imgs = [];
+
+  for (let i = 0; i < number; i++) {
+    imgs.push(loadImage(`tiles/${folder}/${i}.png`));
+  }
+
+  return imgs;
+};
+
 /* == MAIN FUNCTIONS == */
 function preload() {
-  const path = "tiles/circuit/";
-
-  imgs = [
-    // Circuit
-    loadImage(path + "0.png"),
-    loadImage(path + "1.png"),
-    loadImage(path + "2.png"),
-    loadImage(path + "3.png"),
-    loadImage(path + "4.png"),
-    loadImage(path + "5.png"),
-    loadImage(path + "6.png"),
-    loadImage(path + "7.png"),
-    loadImage(path + "8.png"),
-    loadImage(path + "9.png"),
-    loadImage(path + "10.png"),
-    loadImage(path + "11.png"),
-    loadImage(path + "12.png"),
-
-    // Demo
-    // loadImage(path + "blank.png"),
-    // loadImage(path + "up.png"),
-  ];
+  // imgs = loadAllImages("demo", 2);
+  // imgs = loadAllImages("polka", 2);
+  // imgs = loadAllImages("roads", 2);
+  imgs = loadAllImages("circuit", 13);
+  // imgs = loadAllImages("circuit-coding-train", 13);
 }
 
 function setup() {

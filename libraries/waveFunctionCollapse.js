@@ -105,9 +105,11 @@ class Tile {
       this.edges.left == this.edges.up &&
       this.edges.left == this.edges.right &&
       this.edges.left == this.edges.down
-    )
-      amount = 0;
-    else if (
+    ) {
+      return [this];
+    }
+
+    if (
       // Opposite edges are the same
       this.edges.left == this.edges.right &&
       this.edges.up == this.edges.down
