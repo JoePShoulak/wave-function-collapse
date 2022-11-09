@@ -1,4 +1,4 @@
-const GRID_SIZE = 20;
+const GRID_SIZE = 20; // 20 solves rather easily
 const path = "tiles/circuit/";
 let imgs;
 let grid;
@@ -51,25 +51,25 @@ function setup() {
     return newImg;
   };
 
-  // Dark Green: 0
-  // Dark Gray: 1
-  // Light Green: 2
-  // Light Gray: 3
+  // Dark Green (Blank): B
+  // Dark Gray (IC): I
+  // Light Green (Trace): T
+  // Light Gray (Wire): W
   // These are the edges for the tiles, in order, matching the image names by index
   const edges = [
-    ["111", "111", "111", "111"],
-    ["000", "000", "000", "000"],
-    ["000", "020", "000", "000"],
-    ["000", "030", "000", "030"],
-    ["100", "020", "001", "111"],
-    ["100", "000", "000", "001"],
-    ["000", "020", "000", "020"],
-    ["030", "020", "030", "020"],
-    ["030", "000", "020", "000"],
-    ["020", "020", "000", "020"],
-    ["020", "020", "020", "020"],
-    ["020", "020", "000", "000"],
-    ["000", "020", "000", "020"],
+    ["III", "III", "III", "III"], // 0
+    ["BBB", "BBB", "BBB", "BBB"], // 1
+    ["BBB", "BTB", "BBB", "BBB"], // 2
+    ["BBB", "BWB", "BBB", "BWB"], // 3
+    ["IBB", "BTB", "BBI", "III"], // 4
+    ["IBB", "BBB", "BBB", "BBI"], // 5
+    ["BBB", "BTB", "BBB", "BTB"], // 6
+    ["BWB", "BTB", "BWB", "BTB"], // 7
+    ["BWB", "BBB", "BTB", "BBB"], // 8
+    ["BTB", "BTB", "BBB", "BTB"], // 9
+    ["BTB", "BTB", "BTB", "BTB"], // 10
+    ["BTB", "BTB", "BBB", "BBB"], // 11
+    ["BBB", "BTB", "BBB", "BTB"], // 12
   ];
 
   const tiles = [];
