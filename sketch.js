@@ -1,5 +1,5 @@
 /* == VARIABLES == */
-const GRID_SIZE = 30; // 20 solves rather easily
+const GRID_SIZE = 100; // 20 solves rather easily
 const path = "tiles/circuit/";
 const tiles = [];
 let imgs;
@@ -89,15 +89,11 @@ function setup() {
 
   createCanvas(innerWidth, innerHeight);
   fill("black");
-  stroke("white");
+  noStroke();
   drawGrid(grid);
 }
 
 function draw() {
-  // This causes visual artifacts; redrawing whole screen instead
-  // const newCell = grid.advance();
-  // drawCell(newCell);
-
   grid.advance();
   drawGrid(grid);
 
