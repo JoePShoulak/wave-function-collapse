@@ -87,15 +87,18 @@ function setup() {
   grid = new Grid(GRID_SIZE, GRID_SIZE);
   grid.resetCallback = (g) => drawGrid(g);
 
+  Tile.resetCallback = (cell) => drawCell(cell);
+
   createCanvas(innerWidth, innerHeight);
   fill("black");
+  background(0);
   noStroke();
   drawGrid(grid);
 }
 
 function draw() {
-  grid.advance();
-  drawGrid(grid);
+  const newCell = grid.advance();
+  drawCell(newCell);
 
   if (grid.finished) {
     noLoop();
