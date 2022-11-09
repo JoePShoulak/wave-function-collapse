@@ -11,18 +11,7 @@ const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 
 const reverseString = (string) => string.split("").reverse().join("");
 
-const compareEdge = (myEdge, relEdge) => {
-  if (myEdge instanceof String || typeof myEdge == "string") {
-    return myEdge == reverseString(relEdge);
-  }
-  // The below portions have not been tested
-  // Also requires Array helper from here https://stackoverflow.com/questions/7837456/how-to-compare-arrays-in-javascript
-  // else if (myEdge instanceof Array || typeof myEdge == "array") {
-  //   return myEdge.reverse().equals(relEdge);
-  // } else if (myEdge instanceof Number || typeof myEdge == "number") {
-  //   return myEdge == relEdge;
-  // }
-};
+const compareEdge = (myEdge, relEdge) => myEdge == reverseString(relEdge);
 
 const componentToHex = (c) => {
   var hex = c.toString(16);
@@ -65,19 +54,11 @@ class Tile {
     this.img = img;
     this.img.loadPixels();
 
-    const w = this.img.width;
-    const h = this.img.height;
-
-    const up = this.edgeFromImg("up");
-    const right = this.edgeFromImg("right");
-    const down = this.edgeFromImg("down");
-    const left = this.edgeFromImg("left");
-
     this.edges = {
-      up: up.join(""),
-      right: right.join(""),
-      down: down.join(""),
-      left: left.join(""),
+      up: this.edgeFromImg("up"),
+      right: this.edgeFromImg("right"),
+      down: this.edgeFromImg("down"),
+      left: this.edgeFromImg("left"),
     };
   }
 
@@ -111,7 +92,9 @@ class Tile {
         break;
     }
 
-    return points.map((point) => Tile.addColor(this.img.get(...point)));
+    return points
+      .map((point) => Tile.addColor(this.img.get(...point)))
+      .join("");
   }
 
   allRotations() {
@@ -186,11 +169,9 @@ class Cell {
     this.options = [...Cell.options];
 
     this.grid.uncollapsed.push(this);
-
-    Cell.resetCallback(this);
   }
 
-  compare(key, option) {
+  compare(dir, option) {
     const oppEdge = {
       up: "down",
       down: "up",
@@ -198,9 +179,9 @@ class Cell {
       right: "left",
     };
 
-    if (this.neighbors[key]?.state) {
-      const myEdge = option.edges[key];
-      const relEdge = this.neighbors[key].state.edges[oppEdge[key]];
+    if (this.neighbors[dir]?.state) {
+      const myEdge = option.edges[dir];
+      const relEdge = this.neighbors[dir].state.edges[oppEdge[dir]];
 
       return compareEdge(myEdge, relEdge);
     }
@@ -269,19 +250,8 @@ class Grid {
     return randomFrom(allMin);
   }
 
-  validNeighbor(index, flag = "") {
-    let flagBool = true;
-
-    switch (flag) {
-      case "right":
-        flagBool = index % this.width != 0;
-        break;
-      case "left":
-        flagBool = (index + 1) % this.width != 0;
-        break;
-    }
-
-    return index >= 0 && index < this.cells.length && flagBool;
+  advance() {
+    return this.next?.collapse();
   }
 
   getNeighbors(cell) {
@@ -302,14 +272,18 @@ class Grid {
     return nbrs;
   }
 
-  advance() {
-    return this.next?.collapse();
-  }
+  validNeighbor(index, flag = "") {
+    let flagBool = true;
 
-  resetCallback() {}
+    switch (flag) {
+      case "right":
+        flagBool = index % this.width != 0;
+        break;
+      case "left":
+        flagBool = (index + 1) % this.width != 0;
+        break;
+    }
 
-  reset() {
-    this.cells.forEach((cell) => cell.reset());
-    this.resetCallback(this);
+    return index >= 0 && index < this.cells.length && flagBool;
   }
 }

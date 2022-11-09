@@ -36,14 +36,13 @@ function preload() {
 }
 
 function setup() {
-  imgs.forEach((img, i) => tiles.push(new Tile(img)));
+  imgs.forEach((img) => tiles.push(new Tile(img)));
 
   tiles.forEach((tile) => {
     tile.allRotations().forEach((rot) => Cell.options.push(rot));
   });
 
   grid = new Grid(GRID_SIZE, GRID_SIZE);
-  grid.resetCallback = (g) => drawGrid(g);
 
   createCanvas(innerWidth, innerHeight);
   fill("black");
