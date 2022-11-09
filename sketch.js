@@ -1,4 +1,4 @@
-const GRID_SIZE = 100; // 20 solves rather easily
+const GRID_SIZE = 40; // 20 solves rather easily
 const path = "tiles/circuit/";
 let imgs;
 let grid;
