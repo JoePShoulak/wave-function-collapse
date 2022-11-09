@@ -1,5 +1,5 @@
 /* == VARIABLES == */
-const GRID_SIZE = 100; // 20 solves rather easily
+const GRID_SIZE = 40; // 20 solves rather easily
 const path = "tiles/circuit/";
 const tiles = [];
 let imgs;
@@ -101,6 +101,7 @@ function draw() {
   drawCell(newCell);
 
   if (grid.finished) {
+    drawGrid(grid);
     noLoop();
   }
 }
