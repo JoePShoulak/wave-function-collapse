@@ -87,6 +87,9 @@ class Cell {
   collapse() {
     this.state = randomFrom(this.options);
 
+    const index = this.grid.uncollapsed.indexOf(this);
+    this.grid.uncollapsed.splice(index, 1);
+
     Object.values(this.neighbors).forEach((cell) => cell.update());
 
     return this;
@@ -94,8 +97,11 @@ class Cell {
 
   reset() {
     delete this.state;
-    Cell.resetCallback(this);
     this.options = [...Cell.options];
+
+    this.grid.uncollapsed.push(this);
+
+    Cell.resetCallback(this);
   }
 
   compare(key, option) {
@@ -156,19 +162,17 @@ class Grid {
     this.cells.forEach((cell) => {
       cell.neighbors = this.getNeighbors(cell);
     });
-  }
 
-  get allUncollapsed() {
-    return this.cells.filter((cell) => cell.state == undefined);
+    this.uncollapsed = [...this.cells];
   }
 
   get finished() {
-    return this.allUncollapsed.length == 0;
+    return this.uncollapsed.length == 0;
   }
 
   get next() {
     // TODO Optimize this
-    const allU = this.allUncollapsed;
+    const allU = this.uncollapsed;
 
     const rSeed = allU[0]?.options?.length;
     const minE = allU.reduce((acc, val) => {
