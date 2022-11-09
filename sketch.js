@@ -42,20 +42,6 @@ function drawCell(cell) {
   img ? image(img, ...pos, ...size) : rect(...pos, ...size);
 }
 
-const rotateImg = (img, amount) => {
-  const w = img.width;
-  const h = img.height;
-
-  const newImg = createGraphics(w, h);
-
-  newImg.imageMode(CENTER);
-  newImg.translate(w / 2, h / 2);
-  newImg.rotate(HALF_PI * amount);
-  newImg.image(img, 0, 0);
-
-  return newImg;
-};
-
 /* == MAIN FUNCTIONS == */
 function preload() {
   imgs = [
@@ -76,8 +62,6 @@ function preload() {
 }
 
 function setup() {
-  Tile.rotateImage = rotateImg;
-
   edges.forEach((edges, i) => tiles.push(new Tile(imgs[i], edges)));
 
   tiles.forEach((tile) => {

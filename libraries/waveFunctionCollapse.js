@@ -13,12 +13,26 @@ const reverseString = (string) => string.split("").reverse().join("");
 
 const compareEdge = (myEdge, relEdge) => myEdge == reverseString(relEdge);
 
+const rotateImg = (img, amount) => {
+  const w = img.width;
+  const h = img.height;
+
+  const newImg = createGraphics(w, h);
+
+  newImg.imageMode(CENTER);
+  newImg.translate(w / 2, h / 2);
+  newImg.rotate(HALF_PI * amount);
+  newImg.image(img, 0, 0);
+
+  return newImg;
+};
+
 /* == TILE CLASS == */
 class Tile {
-  static rotateImage() {}
-
   constructor(img, edges) {
     this.img = img;
+
+    // console.log(this.)
 
     this.edges = {
       up: edges[0],
@@ -63,7 +77,7 @@ class Tile {
       edges.unshift(edges.pop());
     }
 
-    const newImg = Tile.rotateImage(this.img, amount);
+    const newImg = rotateImg(this.img, amount);
 
     return new Tile(newImg, edges);
   }
