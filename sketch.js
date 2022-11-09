@@ -99,9 +99,9 @@ function setup() {
 function draw() {
   const newCell = grid.advance();
   drawCell(newCell);
+  Object.values(newCell.neighbors).forEach((cell) => drawCell(cell));
 
   if (grid.finished) {
-    drawGrid(grid);
     noLoop();
   }
 }
