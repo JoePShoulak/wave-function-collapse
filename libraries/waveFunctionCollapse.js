@@ -6,12 +6,14 @@
  * Repo: https://github.com/CodingTrain/Wave-Function-Collapse
  */
 
+/* == HELPERS == */
 const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 
 const reverseString = (string) => string.split("").reverse().join("");
 
 const compareEdge = (myEdge, relEdge) => myEdge == reverseString(relEdge);
 
+/* == TILE CLASS == */
 class Tile {
   static rotateImage() {}
 
@@ -67,6 +69,7 @@ class Tile {
   }
 }
 
+/* == CELL CLASS == */
 class Cell {
   static options = [];
 
@@ -135,6 +138,7 @@ class Cell {
   }
 }
 
+/* == GRID CLASS == */
 class Grid {
   constructor(width, height) {
     this.width = width;

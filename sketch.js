@@ -1,8 +1,32 @@
+/* == VARIABLES == */
 const GRID_SIZE = 30; // 20 solves rather easily
 const path = "tiles/circuit/";
+const tiles = [];
 let imgs;
 let grid;
 
+// Dark Green (Blank): B
+// Dark Gray (IC): I
+// Light Green (Trace): T
+// Light Gray (Wire): W
+// These are the edges for the tiles, in order, matching the image names by index
+const edges = [
+  ["III", "III", "III", "III"], // 0
+  ["BBB", "BBB", "BBB", "BBB"], // 1
+  ["BBB", "BTB", "BBB", "BBB"], // 2
+  ["BBB", "BWB", "BBB", "BWB"], // 3
+  ["IBB", "BTB", "BBI", "III"], // 4
+  ["IBB", "BBB", "BBB", "BBI"], // 5
+  ["BBB", "BTB", "BBB", "BTB"], // 6
+  ["BWB", "BTB", "BWB", "BTB"], // 7
+  ["BWB", "BBB", "BTB", "BBB"], // 8
+  ["BTB", "BTB", "BBB", "BTB"], // 9
+  ["BTB", "BTB", "BTB", "BTB"], // 10
+  ["BTB", "BTB", "BBB", "BBB"], // 11
+  ["BBB", "BTB", "BBB", "BTB"], // 12
+];
+
+/* == HELPER FUNCTIONS == */
 function drawGrid(grid) {
   grid.cells.forEach((cell) => drawCell(cell));
 }
@@ -18,6 +42,21 @@ function drawCell(cell) {
   img ? image(img, ...pos, ...size) : rect(...pos, ...size);
 }
 
+const rotateImg = (img, amount) => {
+  const w = img.width;
+  const h = img.height;
+
+  const newImg = createGraphics(w, h);
+
+  newImg.imageMode(CENTER);
+  newImg.translate(w / 2, h / 2);
+  newImg.rotate(HALF_PI * amount);
+  newImg.image(img, 0, 0);
+
+  return newImg;
+};
+
+/* == MAIN FUNCTIONS == */
 function preload() {
   imgs = [
     loadImage(path + "0.png"),
@@ -37,42 +76,7 @@ function preload() {
 }
 
 function setup() {
-  Tile.rotateImage = (img, amount) => {
-    const w = img.width;
-    const h = img.height;
-
-    const newImg = createGraphics(w, h);
-
-    newImg.imageMode(CENTER);
-    newImg.translate(w / 2, h / 2);
-    newImg.rotate(HALF_PI * amount);
-    newImg.image(img, 0, 0);
-
-    return newImg;
-  };
-
-  // Dark Green (Blank): B
-  // Dark Gray (IC): I
-  // Light Green (Trace): T
-  // Light Gray (Wire): W
-  // These are the edges for the tiles, in order, matching the image names by index
-  const edges = [
-    ["III", "III", "III", "III"], // 0
-    ["BBB", "BBB", "BBB", "BBB"], // 1
-    ["BBB", "BTB", "BBB", "BBB"], // 2
-    ["BBB", "BWB", "BBB", "BWB"], // 3
-    ["IBB", "BTB", "BBI", "III"], // 4
-    ["IBB", "BBB", "BBB", "BBI"], // 5
-    ["BBB", "BTB", "BBB", "BTB"], // 6
-    ["BWB", "BTB", "BWB", "BTB"], // 7
-    ["BWB", "BBB", "BTB", "BBB"], // 8
-    ["BTB", "BTB", "BBB", "BTB"], // 9
-    ["BTB", "BTB", "BTB", "BTB"], // 10
-    ["BTB", "BTB", "BBB", "BBB"], // 11
-    ["BBB", "BTB", "BBB", "BTB"], // 12
-  ];
-
-  const tiles = [];
+  Tile.rotateImage = rotateImg;
 
   edges.forEach((edges, i) => tiles.push(new Tile(imgs[i], edges)));
 
@@ -90,11 +94,13 @@ function setup() {
 }
 
 function draw() {
-  const newCell = grid.advance();
   // This causes visual artifacts; redrawing whole screen instead
+  // const newCell = grid.advance();
   // drawCell(newCell);
 
+  grid.advance();
   drawGrid(grid);
+
   if (grid.finished) {
     noLoop();
   }
