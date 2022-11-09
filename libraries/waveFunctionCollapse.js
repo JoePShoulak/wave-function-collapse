@@ -11,7 +11,27 @@ const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 
 const reverseString = (string) => string.split("").reverse().join("");
 
-const compareEdge = (myEdge, relEdge) => myEdge == reverseString(relEdge);
+const compareEdge = (myEdge, relEdge) => {
+  if (myEdge instanceof String || typeof myEdge == "string") {
+    return myEdge == reverseString(relEdge);
+  }
+  // The below portions have not been tested
+  // Also requires Array helper from here https://stackoverflow.com/questions/7837456/how-to-compare-arrays-in-javascript
+  // else if (myEdge instanceof Array || typeof myEdge == "array") {
+  //   return myEdge.reverse().equals(relEdge);
+  // } else if (myEdge instanceof Number || typeof myEdge == "number") {
+  //   return myEdge == relEdge;
+  // }
+};
+
+const componentToHex = (c) => {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+};
+
+const rgbToHex = (r, g, b, _a) => {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+};
 
 const rotateImg = (img, amount) => {
   const w = img.width;
@@ -29,17 +49,69 @@ const rotateImg = (img, amount) => {
 
 /* == TILE CLASS == */
 class Tile {
-  constructor(img, edges) {
-    this.img = img;
+  static colors = {};
 
-    // console.log(this.)
+  static addColor(color) {
+    color = rgbToHex(...color);
+    if (Tile.colors[color] == undefined) {
+      const iterator = Object.keys(Tile.colors).length;
+      Tile.colors[color] = String.fromCharCode(iterator);
+    }
+
+    return Tile.colors[color];
+  }
+
+  constructor(img) {
+    this.img = img;
+    this.img.loadPixels();
+
+    const w = this.img.width;
+    const h = this.img.height;
+
+    const up = this.edgeFromImg("up");
+    const right = this.edgeFromImg("right");
+    const down = this.edgeFromImg("down");
+    const left = this.edgeFromImg("left");
 
     this.edges = {
-      up: edges[0],
-      right: edges[1],
-      down: edges[2],
-      left: edges[3],
+      up: up.join(""),
+      right: right.join(""),
+      down: down.join(""),
+      left: left.join(""),
     };
+  }
+
+  edgeFromImg(dir) {
+    let points = [];
+
+    const w = this.img.width;
+    const h = this.img.height;
+
+    const NW = [1, 1];
+    const NN = [w / 2, 1];
+    const NE = [w - 1, 1];
+    const EE = [w - 1, h / 2];
+    const SE = [w - 1, h - 1];
+    const SS = [w / 2, h - 1];
+    const SW = [1, h - 1];
+    const WW = [1, h / 2];
+
+    switch (dir) {
+      case "up":
+        points = [NW, NN, NE];
+        break;
+      case "right":
+        points = [NE, EE, SE];
+        break;
+      case "down":
+        points = [SE, SS, SW];
+        break;
+      case "left":
+        points = [SW, WW, NW];
+        break;
+    }
+
+    return points.map((point) => Tile.addColor(this.img.get(...point)));
   }
 
   allRotations() {
@@ -48,15 +120,15 @@ class Tile {
 
     if (
       // All edges are the same
-      this.edges.up == this.edges.right &&
+      this.edges.left == this.edges.up &&
       this.edges.left == this.edges.right &&
-      this.edges.down == this.edges.right
+      this.edges.left == this.edges.down
     )
       amount = 0;
     else if (
       // Opposite edges are the same
-      this.edges.up == this.edges.down &&
-      this.edges.left == this.edges.right
+      this.edges.left == this.edges.right &&
+      this.edges.up == this.edges.down
     ) {
       amount = 2;
     } else {

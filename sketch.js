@@ -5,32 +5,6 @@ const tiles = [];
 let imgs;
 let grid;
 
-// Dark Green (Blank): B
-// Dark Gray (IC): I
-// Light Green (Trace): T
-// Light Gray (Wire): W
-// These are the edges for the tiles, in order, matching the image names by index
-const edges = [
-  ["III", "III", "III", "III"], // 0
-  ["BBB", "BBB", "BBB", "BBB"], // 1
-  ["BBB", "BTB", "BBB", "BBB"], // 2
-  ["BBB", "BWB", "BBB", "BWB"], // 3
-  ["IBB", "BTB", "BBI", "III"], // 4
-  ["IBB", "BBB", "BBB", "BBI"], // 5
-  ["BBB", "BTB", "BBB", "BTB"], // 6
-  ["BWB", "BTB", "BWB", "BTB"], // 7
-  ["BWB", "BBB", "BTB", "BBB"], // 8
-  ["BTB", "BTB", "BBB", "BTB"], // 9
-  ["BTB", "BTB", "BTB", "BTB"], // 10
-  ["BTB", "BTB", "BBB", "BBB"], // 11
-  ["BBB", "BTB", "BBB", "BTB"], // 12
-];
-
-/* == HELPER FUNCTIONS == */
-function drawGrid(grid) {
-  grid.cells.forEach((cell) => drawCell(cell));
-}
-
 function drawCell(cell) {
   const w = width / grid.width;
   const h = height / grid.height;
@@ -62,7 +36,7 @@ function preload() {
 }
 
 function setup() {
-  edges.forEach((edges, i) => tiles.push(new Tile(imgs[i], edges)));
+  imgs.forEach((img, i) => tiles.push(new Tile(img)));
 
   tiles.forEach((tile) => {
     tile.allRotations().forEach((rot) => Cell.options.push(rot));
@@ -71,13 +45,11 @@ function setup() {
   grid = new Grid(GRID_SIZE, GRID_SIZE);
   grid.resetCallback = (g) => drawGrid(g);
 
-  Tile.resetCallback = (cell) => drawCell(cell);
-
   createCanvas(innerWidth, innerHeight);
   fill("black");
-  background(0);
+  background("black");
   noStroke();
-  drawGrid(grid);
+  frameRate(60);
 }
 
 function draw() {
