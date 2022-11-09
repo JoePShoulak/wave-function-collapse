@@ -1,3 +1,11 @@
+/**
+ * Based off the incredible work of Dan Shiffman
+ *
+ * Website: https://thecodingtrain.com/
+ * Tutorial:  https://youtu.be/rI_y2GAlQFM
+ * Repo: https://github.com/CodingTrain/Wave-Function-Collapse
+ */
+
 const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 
 const reverseString = (string) => string.split("").reverse().join("");
