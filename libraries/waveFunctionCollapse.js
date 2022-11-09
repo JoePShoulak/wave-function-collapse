@@ -70,6 +70,8 @@ class Tile {
 class Cell {
   static options = [];
 
+  static resetCallback() {}
+
   constructor(x, y, grid) {
     this.x = x;
     this.y = y;
@@ -89,7 +91,7 @@ class Cell {
 
   reset() {
     delete this.state;
-
+    Cell.resetCallback(this);
     this.options = [...Cell.options];
   }
 

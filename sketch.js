@@ -83,6 +83,8 @@ function setup() {
   grid = new Grid(GRID_SIZE, GRID_SIZE);
   grid.resetCallback = (g) => drawGrid(g);
 
+  Cell.resetCallback = (cell) => drawCell(cell);
+
   createCanvas(innerWidth, innerHeight);
   fill("black");
   stroke("white");
@@ -91,9 +93,8 @@ function setup() {
 
 function draw() {
   const newCell = grid.advance();
-  // drawCell(newCell);
+  drawCell(newCell);
 
-  drawGrid(grid);
   if (grid.finished) {
     noLoop();
   }
