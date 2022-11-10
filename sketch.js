@@ -40,7 +40,7 @@ function setup() {
       tile.allRotations().forEach((rot) => Cell.options.push(rot));
     });
 
-  grid = new Grid(GRID_SIZE, GRID_SIZE);
+  grid = new Grid(floor(width / 3), floor(height / 3));
 
   Cell.resetCallback = (cell) => drawCell(cell);
 

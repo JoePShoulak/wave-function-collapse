@@ -12,6 +12,15 @@ const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 const reverseString = (string) => string.split("").reverse().join("");
 
 const compareEdge = (myEdge, relEdge) => myEdge == reverseString(relEdge);
+// const compareEdge = (myEdge, relEdge) => {
+//   const revEdge = relEdge.reverse();
+
+//   for (let i = 0; i < myEdge.length; i++) {
+//     if (myEdge[i] != revEdge[i]) return false;
+//   }
+
+//   return true;
+// };
 
 const componentToHex = (c) => {
   var hex = c.toString(16);
@@ -61,6 +70,7 @@ class Tile {
     DIRECTIONS.forEach((dir) => (this.edges[dir] = this.edgeFromImg(dir)));
   }
 
+  // TODO get this to return all pixels from the edge, not just the 3
   edgeFromImg(dir) {
     let points = [];
 
