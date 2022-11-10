@@ -44,7 +44,7 @@ function setup() {
       tile.allRotations().forEach((rot) => Cell.options.push(rot));
     });
 
-  waveFunction = new WaveFunction(
+  waveFunction = new Grid(
     floor(width * GRID_SCALE),
     floor(height * GRID_SCALE)
   );

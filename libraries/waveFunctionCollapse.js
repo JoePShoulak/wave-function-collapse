@@ -146,7 +146,8 @@ class Cell {
   static resetCallback() {}
 
   static compareEdge(myEdge, relEdge) {
-    return myEdge.every((bit, i) => bit == [...relEdge].reverse()[i]);
+    const res = myEdge.every((bit, i) => bit == [...relEdge].reverse()[i]);
+    return res;
   }
 
   constructor(x, y, grid) {
@@ -164,7 +165,9 @@ class Cell {
     const index = this.grid.uncollapsed.indexOf(this);
     this.grid.uncollapsed.splice(index, 1);
 
-    Object.values(this.neighbors).forEach((cell) => cell.update());
+    Object.values(this.neighbors).forEach((cell) => {
+      cell.update();
+    });
 
     return this;
   }
@@ -296,5 +299,3 @@ class Grid {
     return index >= 0 && index < this.cells.length && flagBool;
   }
 }
-
-class WaveFunction extends Grid {}
