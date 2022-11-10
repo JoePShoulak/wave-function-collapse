@@ -29,6 +29,10 @@ function preload() {
   // imgs = loadAllImages("demo", 2);
   // imgs = loadAllImages("polka", 2);
   // imgs = loadAllImages("roads", 2);
+  // imgs = loadAllImages("test/mountains", 2);
+  // imgs = loadAllImages("test/pipes", 2);
+  // imgs = loadAllImages("test/rail", 7);
+  // imgs = loadAllImages("test/train-tracks", 7);
   imgs = loadAllImages("circuit", 13);
   // imgs = loadAllImages("circuit-coding-train", 13);
 }
