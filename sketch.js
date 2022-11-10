@@ -1,11 +1,11 @@
 /* == VARIABLES == */
-const GRID_SIZE = 40; // 40 looks good deployed
+const GRID_SCALE = 1 / 3; // 1/3 is in deployment
 let imgs;
-let grid;
+let waveFunction;
 
 function drawCell(cell) {
-  const w = width / grid.width;
-  const h = height / grid.height;
+  const w = width / waveFunction.width;
+  const h = height / waveFunction.height;
 
   const img = cell.state?.img;
   const pos = [cell.x * w, cell.y * h];
@@ -40,7 +40,10 @@ function setup() {
       tile.allRotations().forEach((rot) => Cell.options.push(rot));
     });
 
-  grid = new Grid(floor(width / 3), floor(height / 3));
+  waveFunction = new WaveFunction(
+    floor(width * GRID_SCALE),
+    floor(height * GRID_SCALE)
+  );
 
   Cell.resetCallback = (cell) => drawCell(cell);
 
@@ -48,15 +51,19 @@ function setup() {
   fill("black");
   background("black");
   noStroke();
-  frameRate(60);
 }
 
 function draw() {
-  const newCell = grid.advance();
+  // Draw Every change
+  const newCell = waveFunction.observe();
   drawCell(newCell);
   Object.values(newCell.neighbors).forEach((cell) => drawCell(cell));
-
-  if (grid.finished) {
+  if (waveFunction.collapsed) {
     noLoop();
   }
+
+  // Solve first, then draw
+  // noLoop();
+  // waveFunction.collapse();
+  // waveFunction.cells.forEach((cell) => drawCell(cell));
 }

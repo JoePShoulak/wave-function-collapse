@@ -11,6 +11,7 @@ const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 
 const reverseString = (string) => string.split("").reverse().join("");
 
+// TODO get this to compare edges as arrays, not strings
 const compareEdge = (myEdge, relEdge) => myEdge == reverseString(relEdge);
 // const compareEdge = (myEdge, relEdge) => {
 //   const revEdge = relEdge.reverse();
@@ -137,15 +138,17 @@ class Tile {
   }
 
   rotate(amount) {
-    const edges = [...Object.values(this.edges)];
+    const w = this.img.width;
+    const h = this.img.height;
 
-    for (let i = 0; i < amount; i++) {
-      edges.unshift(edges.pop());
-    }
+    const newImg = createGraphics(w, h);
 
-    const newImg = rotateImg(this.img, amount);
+    newImg.imageMode(CENTER);
+    newImg.translate(w / 2, h / 2);
+    newImg.rotate(HALF_PI * amount);
+    newImg.image(this.img, 0, 0);
 
-    return new Tile(newImg, edges);
+    return new Tile(newImg);
   }
 }
 
@@ -240,46 +243,51 @@ class Grid {
     this.uncollapsed = [...this.cells];
   }
 
-  get finished() {
+  get collapsed() {
     return this.uncollapsed.length == 0;
   }
 
   get next() {
-    // TODO Optimize this
-    const allU = this.uncollapsed;
-
-    const rSeed = allU[0]?.options.length;
-    const minE = allU.reduce((acc, val) => {
+    const minEntropy = this.uncollapsed.reduce((acc, val) => {
       const ops = val.options.length;
 
       return acc < ops ? acc : ops;
-    }, rSeed);
+    }, Cell.options.length);
 
-    const allMin = allU.filter((cell) => cell.options.length == minE);
+    const allMin = this.uncollapsed.filter(
+      (cell) => cell.options.length == minEntropy
+    );
 
     return randomFrom(allMin);
   }
 
-  advance() {
+  collapse() {
+    while (!this.collapsed) {
+      this.observe();
+    }
+  }
+
+  observe() {
     return this.next?.collapse();
   }
 
   getNeighbors(cell) {
-    const nbrs = {};
-
     const index = cell.x + cell.y * this.width;
 
-    const up = index - this.width;
-    const down = index + this.width;
-    const right = index + 1;
-    const left = index - 1;
+    const nbrs = {
+      up: index - this.width,
+      down: index + this.width,
+      right: index + 1,
+      left: index - 1,
+    };
 
-    if (this.validNeighbor(up)) nbrs.up = this.cells[up];
-    if (this.validNeighbor(down)) nbrs.down = this.cells[down];
-    if (this.validNeighbor(right, "right")) nbrs.right = this.cells[right];
-    if (this.validNeighbor(left, "left")) nbrs.left = this.cells[left];
+    const validNbrs = {};
 
-    return nbrs;
+    Object.entries(nbrs).forEach(([dir, nbr]) => {
+      if (this.validNeighbor(nbr, dir)) validNbrs[dir] = this.cells[nbr];
+    });
+
+    return validNbrs;
   }
 
   validNeighbor(index, flag = "") {
@@ -297,3 +305,5 @@ class Grid {
     return index >= 0 && index < this.cells.length && flagBool;
   }
 }
+
+class WaveFunction extends Grid {}
