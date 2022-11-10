@@ -11,17 +11,11 @@ const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 
 const reverseString = (string) => string.split("").reverse().join("");
 
-// TODO get this to compare edges as arrays, not strings
-const compareEdge = (myEdge, relEdge) => myEdge == reverseString(relEdge);
-// const compareEdge = (myEdge, relEdge) => {
-//   const revEdge = relEdge.reverse();
+const compareEdge = (myEdge, relEdge) => {
+  const revEdge = [...relEdge].reverse();
 
-//   for (let i = 0; i < myEdge.length; i++) {
-//     if (myEdge[i] != revEdge[i]) return false;
-//   }
-
-//   return true;
-// };
+  return myEdge.every((bit, i) => bit == revEdge[i]);
+};
 
 const componentToHex = (c) => {
   var hex = c.toString(16);
@@ -50,19 +44,6 @@ const DIRECTIONS = ["up", "down", "left", "right"];
 
 /* == TILE CLASS == */
 class Tile {
-  static colors = {};
-
-  static addColor(color) {
-    color = rgbToHex(...color);
-
-    if (Tile.colors[color] == undefined) {
-      const iterator = Object.keys(Tile.colors).length;
-      Tile.colors[color] = String.fromCharCode(iterator);
-    }
-
-    return Tile.colors[color];
-  }
-
   constructor(img, edges = null) {
     this.img = img;
     this.img.loadPixels();
@@ -106,9 +87,11 @@ class Tile {
         break;
     }
 
-    return points
-      .map((point) => Tile.addColor(this.img.get(...point)))
-      .join("");
+    return points.map((point) => {
+      let color = this.img.get(...point);
+      color = rgbToHex(...color);
+      return color;
+    });
   }
 
   allRotations() {
