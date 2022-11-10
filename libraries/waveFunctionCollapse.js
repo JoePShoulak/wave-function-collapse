@@ -66,7 +66,7 @@ class Tile {
 
     return points.map((point) => rgbToHex(...this.img.get(...point)));
 
-    // TODO get this to return all pixels from the edge, not just the 3
+    // TODO This doesn't yet work for tiles/circuit-2/10.png, and I don't know if it's the code or tile
 
     // const w = this.img.width;
     // const h = this.img.height;
@@ -81,12 +81,12 @@ class Tile {
     //     break;
     //   case "right":
     //     for (let y = 0; y < h; y++) {
-    //       edge.push(rgbToHex(...this.img.get(w, y)));
+    //       edge.push(rgbToHex(...this.img.get(w - 1, y)));
     //     }
     //     break;
     //   case "down":
     //     for (let x = w - 1; x >= 0; x--) {
-    //       edge.push(rgbToHex(...this.img.get(x, h)));
+    //       edge.push(rgbToHex(...this.img.get(x, h - 1)));
     //     }
     //     break;
     //   case "left":
