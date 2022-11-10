@@ -58,10 +58,10 @@ class Tile {
 
   // TODO get this to return all pixels from the edge, not just the 3
   edgeFromImg(dir) {
-    let points = [];
-
     const w = this.img.width;
     const h = this.img.height;
+
+    let points = [];
 
     const NW = [1, 1];
     const NN = [w / 2, 1];
@@ -92,6 +92,39 @@ class Tile {
       color = rgbToHex(...color);
       return color;
     });
+
+    // const up = [];
+    // const right = [];
+    // const down = [];
+    // const left = [];
+
+    // for (let x = 0; x < w; x++) {
+    //   const point = this.img.get(x, 0);
+    //   up.push(rgbToHex(...point));
+    // }
+    // for (let y = 0; y < h; y++) {
+    //   const point = this.img.get(w, y);
+    //   right.push(rgbToHex(...point));
+    // }
+    // for (let x = w; x >= 0; x--) {
+    //   const point = this.img.get(x, h);
+    //   down.push(rgbToHex(...point));
+    // }
+    // for (let y = h; y >= 0; y--) {
+    //   const point = this.img.get(0, y);
+    //   left.push(rgbToHex(...point));
+    // }
+
+    // switch (dir) {
+    //   case "up":
+    //     return up;
+    //   case "right":
+    //     return right;
+    //   case "down":
+    //     return down;
+    //   case "left":
+    //     return left;
+    // }
   }
 
   allRotations() {

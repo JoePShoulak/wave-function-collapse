@@ -56,8 +56,10 @@ function setup() {
 function draw() {
   // Draw Every change
   const newCell = waveFunction.observe();
+
   drawCell(newCell);
   Object.values(newCell.neighbors).forEach((cell) => drawCell(cell));
+
   if (waveFunction.collapsed) {
     noLoop();
   }
