@@ -32,7 +32,7 @@ function preload() {
   // imgs = loadAllImages("test/mountains", 2);
   // imgs = loadAllImages("test/pipes", 2);
   // imgs = loadAllImages("test/rail", 7);
-  // imgs = loadAllImages("test/train-tracks", 7);
+  // imgs = loadAllImages("test/train-tracks", 2);
   imgs = loadAllImages("circuit", 13);
   // imgs = loadAllImages("circuit-coding-train", 13);
 }
@@ -64,9 +64,7 @@ function draw() {
   drawCell(newCell);
   Object.values(newCell.neighbors).forEach((cell) => drawCell(cell));
 
-  if (waveFunction.collapsed) {
-    noLoop();
-  }
+  if (waveFunction.collapsed) noLoop();
 
   // Solve first, then draw
   // noLoop();

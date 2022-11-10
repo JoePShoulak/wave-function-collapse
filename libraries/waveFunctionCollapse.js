@@ -9,14 +9,6 @@
 /* == HELPERS == */
 const randomFrom = (array) => array[Math.floor(Math.random() * array.length)];
 
-const reverseString = (string) => string.split("").reverse().join("");
-
-const compareEdge = (myEdge, relEdge) => {
-  const revEdge = [...relEdge].reverse();
-
-  return myEdge.every((bit, i) => bit == revEdge[i]);
-};
-
 const componentToHex = (c) => {
   var hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
@@ -26,37 +18,22 @@ const rgbToHex = (r, g, b, _a) => {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 };
 
-const rotateImg = (img, amount) => {
-  const w = img.width;
-  const h = img.height;
-
-  const newImg = createGraphics(w, h);
-
-  newImg.imageMode(CENTER);
-  newImg.translate(w / 2, h / 2);
-  newImg.rotate(HALF_PI * amount);
-  newImg.image(img, 0, 0);
-
-  return newImg;
-};
-
-const DIRECTIONS = ["up", "down", "left", "right"];
-
 /* == TILE CLASS == */
 class Tile {
   constructor(img, edges = null) {
     this.img = img;
     this.img.loadPixels();
+    this.edges = {};
 
     if (edges) {
-      DIRECTIONS.forEach((dir, i) => (this.edges[dir] = edges[i]));
+      Grid.directions.forEach((dir, i) => (this.edges[dir] = edges[i]));
     } else {
-      this.edges = {};
-      DIRECTIONS.forEach((dir) => (this.edges[dir] = this.edgeFromImg(dir)));
+      Grid.directions.forEach(
+        (dir) => (this.edges[dir] = this.edgeFromImg(dir))
+      );
     }
   }
 
-  // TODO get this to return all pixels from the edge, not just the 3
   edgeFromImg(dir) {
     const w = this.img.width;
     const h = this.img.height;
@@ -87,68 +64,58 @@ class Tile {
         break;
     }
 
-    return points.map((point) => {
-      let color = this.img.get(...point);
-      color = rgbToHex(...color);
-      return color;
-    });
+    return points.map((point) => rgbToHex(...this.img.get(...point)));
 
-    // const up = [];
-    // const right = [];
-    // const down = [];
-    // const left = [];
+    // TODO get this to return all pixels from the edge, not just the 3
 
-    // for (let x = 0; x < w; x++) {
-    //   const point = this.img.get(x, 0);
-    //   up.push(rgbToHex(...point));
-    // }
-    // for (let y = 0; y < h; y++) {
-    //   const point = this.img.get(w, y);
-    //   right.push(rgbToHex(...point));
-    // }
-    // for (let x = w; x >= 0; x--) {
-    //   const point = this.img.get(x, h);
-    //   down.push(rgbToHex(...point));
-    // }
-    // for (let y = h; y >= 0; y--) {
-    //   const point = this.img.get(0, y);
-    //   left.push(rgbToHex(...point));
-    // }
+    // const w = this.img.width;
+    // const h = this.img.height;
+
+    // const edge = [];
 
     // switch (dir) {
     //   case "up":
-    //     return up;
+    //     for (let x = 0; x < w; x++) {
+    //       edge.push(rgbToHex(...this.img.get(x, 0)));
+    //     }
+    //     break;
     //   case "right":
-    //     return right;
+    //     for (let y = 0; y < h; y++) {
+    //       edge.push(rgbToHex(...this.img.get(w, y)));
+    //     }
+    //     break;
     //   case "down":
-    //     return down;
+    //     for (let x = w - 1; x >= 0; x--) {
+    //       edge.push(rgbToHex(...this.img.get(x, h)));
+    //     }
+    //     break;
     //   case "left":
-    //     return left;
+    //     for (let y = h - 1; y >= 0; y--) {
+    //       edge.push(rgbToHex(...this.img.get(0, y)));
+    //     }
+    //     break;
     // }
+
+    // return edge;
   }
 
   allRotations() {
-    let amount;
     let rotations = [];
 
-    if (
-      // All edges are the same
-      this.edges.left == this.edges.up &&
-      this.edges.left == this.edges.right &&
-      this.edges.left == this.edges.down
-    ) {
-      return [this];
-    }
+    // All edges are the same
+    const fullySymmetric =
+      this.edges.left.every((bit, i) => bit == this.edges.up[i]) &&
+      this.edges.left.every((bit, i) => bit == this.edges.right[i]) &&
+      this.edges.left.every((bit, i) => bit == this.edges.down[i]);
 
-    if (
-      // Opposite edges are the same
-      this.edges.left == this.edges.right &&
-      this.edges.up == this.edges.down
-    ) {
-      amount = 2;
-    } else {
-      amount = 4;
-    }
+    if (fullySymmetric) return [this];
+
+    // Opposite edges are the same
+    const halfSymmetric =
+      this.edges.left.every((bit, i) => bit == this.edges.right[i]) &&
+      this.edges.up.every((bit, i) => bit == this.edges.down[i]);
+
+    const amount = halfSymmetric ? 2 : 4;
 
     for (let i = 0; i < amount; i++) {
       rotations.push(this.rotate(i));
@@ -177,6 +144,10 @@ class Cell {
   static options = [];
 
   static resetCallback() {}
+
+  static compareEdge(myEdge, relEdge) {
+    return myEdge.every((bit, i) => bit == [...relEdge].reverse()[i]);
+  }
 
   constructor(x, y, grid) {
     this.x = x;
@@ -218,7 +189,7 @@ class Cell {
       const myEdge = option.edges[dir];
       const relEdge = this.neighbors[dir].state.edges[oppEdge[dir]];
 
-      return compareEdge(myEdge, relEdge);
+      return Cell.compareEdge(myEdge, relEdge);
     }
 
     return true;
@@ -226,8 +197,8 @@ class Cell {
 
   update() {
     this.options = this.options.filter((option) => {
-      for (let i = 0; i < DIRECTIONS.length; i++) {
-        if (!this.compare(DIRECTIONS[i], option)) return false;
+      for (let i = 0; i < Grid.directions.length; i++) {
+        if (!this.compare(Grid.directions[i], option)) return false;
       }
 
       return true;
@@ -243,6 +214,8 @@ class Cell {
 
 /* == GRID CLASS == */
 class Grid {
+  static directions = ["up", "down", "left", "right"];
+
   constructor(width, height) {
     this.width = width;
     this.height = height;
@@ -282,9 +255,7 @@ class Grid {
   }
 
   collapse() {
-    while (!this.collapsed) {
-      this.observe();
-    }
+    while (!this.collapsed) this.observe();
   }
 
   observe() {
@@ -310,10 +281,10 @@ class Grid {
     return validNbrs;
   }
 
-  validNeighbor(index, flag = "") {
+  validNeighbor(index, dir) {
     let flagBool = true;
 
-    switch (flag) {
+    switch (dir) {
       case "right":
         flagBool = index % this.width != 0;
         break;
