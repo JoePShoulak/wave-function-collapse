@@ -63,12 +63,16 @@ class Tile {
     return Tile.colors[color];
   }
 
-  constructor(img) {
+  constructor(img, edges = null) {
     this.img = img;
     this.img.loadPixels();
 
-    this.edges = {};
-    DIRECTIONS.forEach((dir) => (this.edges[dir] = this.edgeFromImg(dir)));
+    if (edges) {
+      DIRECTIONS.forEach((dir, i) => (this.edges[dir] = edges[i]));
+    } else {
+      this.edges = {};
+      DIRECTIONS.forEach((dir) => (this.edges[dir] = this.edgeFromImg(dir)));
+    }
   }
 
   // TODO get this to return all pixels from the edge, not just the 3
