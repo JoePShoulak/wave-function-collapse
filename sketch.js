@@ -1,6 +1,7 @@
 /* == VARIABLES == */
 const GRID_SCALE = 1 / 3; // 1/3 is in deployment
 const SHOW_DRAW = true;
+const LOOP_DELAY = 10 * 1000; //ms
 let images;
 let waveFunction;
 
@@ -41,32 +42,38 @@ function preload() {
   // images = loadAllImages("test/circuit-3", 17);
 }
 
+let WIDTH, HEIGHT;
+
 function setup() {
   Tile.fullEdgeDetection = false;
   Cell.resetCallback = (cell) => drawCell(cell);
   Cell.createOptions(images);
 
+  if (WIDTH === undefined) WIDTH = width;
+  if (HEIGHT === undefined) HEIGHT = height;
+
   waveFunction = new Grid(
-    floor(width * GRID_SCALE),
-    floor(height * GRID_SCALE)
+    floor(WIDTH * GRID_SCALE),
+    floor(HEIGHT * GRID_SCALE)
   );
 
   createCanvas(innerWidth, innerHeight);
   fill("black");
   background("black");
   noStroke();
+  loop();
 }
 
 function draw() {
   if (SHOW_DRAW) {
-    const newCell = waveFunction.observe();
+    if (!waveFunction.collapsed) {
+      const newCell = waveFunction.observe();
 
-    drawCell(newCell);
-    Object.values(newCell.neighbors).forEach((cell) => drawCell(cell));
-
-    if (waveFunction.collapsed) {
-      // noLoop();
-      setTimeout(() => waveFunction.reset(), 5000);
+      drawCell(newCell);
+      Object.values(newCell.neighbors).forEach((cell) => drawCell(cell));
+    } else {
+      setTimeout(setup, LOOP_DELAY);
+      noLoop();
     }
   } else {
     waveFunction.collapse();

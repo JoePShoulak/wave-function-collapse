@@ -151,6 +151,8 @@ class Cell {
   }
 
   static createOptions(images) {
+    Cell.options = [];
+
     images
       .map((img) => new Tile(img))
       .forEach((tile) => {
@@ -271,6 +273,10 @@ class Grid {
 
   observe() {
     return this.next?.collapse();
+  }
+
+  reset() {
+    this.cells.forEach((c) => c.reset());
   }
 
   getNeighbors(cell) {
