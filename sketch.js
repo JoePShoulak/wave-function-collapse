@@ -15,7 +15,7 @@ const tilesetLengths = {
   "test/mountains": 2,
   "test/pipes": 2,
   "test/rail": 7,
-  "test/circuit-custom": 17,
+  "circuit-custom": 17,
 };
 
 /* == VARIABLES == */
