@@ -1,10 +1,27 @@
+const tileset = document.currentScript.getAttribute("tileset");
+
+const tilesetLengths = {
+  "circuit-joe": 19,
+  circuit: 13,
+  demo: 2,
+  polka: 2,
+  roads: 2,
+  "train-tracks": 2, // works with full edge
+  "circuit-coding-train": 13,
+  "test/mountains": 2,
+  "test/pipes": 2,
+  "test/rail": 7,
+  "test/circuit-3": 17,
+};
+
 /* == VARIABLES == */
-const GRID_SCALE = 1 / 3; // 1/3 is in deployment
+const GRID_SCALE = 1 / 40; // 1/3 is in deployment
 const SHOW_DRAW = true;
 const LOOP_DELAY = 10 * 1000; // ms
 let images;
 let waveFunction;
 
+/* == HELPER FUNCTION == */
 function drawCell(cell) {
   const w = width / waveFunction.width;
   const h = height / waveFunction.height;
@@ -20,41 +37,27 @@ const loadAllImages = (folder, number) => {
   const imgs = [];
 
   for (let i = 0; i < number; i++) {
-    imgs.push(loadImage(`tiles/${folder}/${i}.png`));
+    imgs.push(loadImage(`/tiles/${folder}/${i}.png`));
   }
 
   return imgs;
 };
 
 /* == MAIN FUNCTIONS == */
+
 function preload() {
-  // images = loadAllImages("circuit-joe", 19);
-
-  // images = loadAllImages("demo", 2);
-  // images = loadAllImages("polka", 2);
-  // images = loadAllImages("roads", 2);
-  // images = loadAllImages("train-tracks", 2); // works with full edge
-  images = loadAllImages("circuit", 13);
-  // images = loadAllImages("circuit-coding-train", 13);
-  // images = loadAllImages("test/mountains", 2);
-  // images = loadAllImages("test/pipes", 2);
-  // images = loadAllImages("test/rail", 7);
-  // images = loadAllImages("test/circuit-3", 17);
+  const length = tilesetLengths[tileset];
+  images = loadAllImages(tileset, length);
 }
-
-let WIDTH, HEIGHT;
 
 function setup() {
   Tile.fullEdgeDetection = false;
   Cell.resetCallback = (cell) => drawCell(cell);
   Cell.createOptions(images);
 
-  if (WIDTH === undefined) WIDTH = width;
-  if (HEIGHT === undefined) HEIGHT = height;
-
   waveFunction = new Grid(
-    floor(WIDTH * GRID_SCALE),
-    floor(HEIGHT * GRID_SCALE)
+    floor(innerWidth * GRID_SCALE),
+    floor(innerHeight * GRID_SCALE)
   );
 
   createCanvas(innerWidth, innerHeight);
