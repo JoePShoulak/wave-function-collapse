@@ -150,7 +150,7 @@ class Cell {
     return res;
   }
 
-  static createOptions(images) {
+  static setOptions(images) {
     Cell.options = [];
 
     images

@@ -64,7 +64,7 @@ function preload() {
 function setup() {
   Tile.fullEdgeDetection = mode == "complex";
   Cell.resetCallback = (cell) => drawCell(cell);
-  Cell.createOptions(images);
+  Cell.setOptions(images);
 
   createCanvas(width, height);
   fill("black");
