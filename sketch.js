@@ -27,7 +27,7 @@ const loadAllImages = (folder, number) => {
 
 /* == MAIN FUNCTIONS == */
 function preload() {
-  images = loadAllImages("circuit-joe", 18);
+  images = loadAllImages("circuit-joe", 19);
 
   // images = loadAllImages("demo", 2);
   // images = loadAllImages("polka", 2);
@@ -64,7 +64,10 @@ function draw() {
     drawCell(newCell);
     Object.values(newCell.neighbors).forEach((cell) => drawCell(cell));
 
-    if (waveFunction.collapsed) noLoop();
+    if (waveFunction.collapsed) {
+      // noLoop();
+      setTimeout(() => waveFunction.reset(), 5000);
+    }
   } else {
     waveFunction.collapse();
     waveFunction.cells.forEach((cell) => drawCell(cell));
