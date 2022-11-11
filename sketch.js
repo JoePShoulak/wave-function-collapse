@@ -26,7 +26,6 @@ const LOOP_DELAY = 10 * 1000; // ms
 
 let images;
 let waveFunction;
-let waiting = false;
 
 /* == HELPER FUNCTION == */
 function drawCell(cell) {
@@ -80,7 +79,6 @@ function setup() {
 function reset() {
   background("black");
   waveFunction.reset();
-  waiting = false;
   loop();
 }
 
@@ -90,11 +88,8 @@ function draw() {
       const newCell = waveFunction.observe();
       drawCell(newCell);
     } else {
-      if (!waiting) {
-        setTimeout(reset, LOOP_DELAY);
-        waiting = true;
-        noLoop();
-      }
+      setTimeout(reset, LOOP_DELAY);
+      noLoop();
     }
   } else {
     waveFunction.collapse();

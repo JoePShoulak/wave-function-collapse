@@ -22,53 +22,57 @@ const rgbToHex = (r, g, b, _a) => {
 class Tile {
   static fullEdgeDetection = false;
 
-  constructor(img, edges = null) {
+  constructor(img) {
     this.img = img;
     this.img.loadPixels();
     this.edges = {};
 
-    if (edges) {
-      Grid.directions.forEach((dir, i) => (this.edges[dir] = edges[i]));
-    } else {
-      Grid.directions.forEach(
-        (dir) => (this.edges[dir] = this.edgeFromImg(dir))
-      );
-    }
+    Grid.directions.forEach((dir) => (this.edges[dir] = this.edgeFromImg(dir)));
   }
 
   edgeFromImg(dir) {
-    // Fast mode (3 points per edge)
+    return Tile.fullEdgeDetection
+      ? this.detectFullEdge(dir)
+      : this.detectSimpleEdge(dir);
+  }
+
+  detectFullEdge(dir) {
     const w = this.img.width;
     const h = this.img.height;
 
     let edge = [];
 
-    if (Tile.fullEdgeDetection) {
-      switch (dir) {
-        case "up":
-          for (let x = 0; x < w; x++) {
-            edge.push(rgbToHex(...this.img.get(x, 0)));
-          }
-          break;
-        case "right":
-          for (let y = 0; y < h; y++) {
-            edge.push(rgbToHex(...this.img.get(w - 1, y)));
-          }
-          break;
-        case "down":
-          for (let x = w - 1; x >= 0; x--) {
-            edge.push(rgbToHex(...this.img.get(x, h - 1)));
-          }
-          break;
-        case "left":
-          for (let y = h - 1; y >= 0; y--) {
-            edge.push(rgbToHex(...this.img.get(0, y)));
-          }
-          break;
-      }
-
-      return edge;
+    switch (dir) {
+      case "up":
+        for (let x = 0; x < w; x++) {
+          edge.push(rgbToHex(...this.img.get(x, 0)));
+        }
+        break;
+      case "right":
+        for (let y = 0; y < h; y++) {
+          edge.push(rgbToHex(...this.img.get(w - 1, y)));
+        }
+        break;
+      case "down":
+        for (let x = w - 1; x >= 0; x--) {
+          edge.push(rgbToHex(...this.img.get(x, h - 1)));
+        }
+        break;
+      case "left":
+        for (let y = h - 1; y >= 0; y--) {
+          edge.push(rgbToHex(...this.img.get(0, y)));
+        }
+        break;
     }
+
+    return edge;
+  }
+
+  detectSimpleEdge(dir) {
+    const w = this.img.width;
+    const h = this.img.height;
+
+    let edge = [];
 
     const NW = [1, 1];
     const NN = [w / 2, 1];
@@ -104,16 +108,16 @@ class Tile {
 
     // All edges are the same
     const fullySymmetric =
-      this.edges.left.every((bit, i) => bit == this.edges.up[i]) &&
-      this.edges.left.every((bit, i) => bit == this.edges.right[i]) &&
-      this.edges.left.every((bit, i) => bit == this.edges.down[i]);
+      this.edges.left.every((pix, i) => pix == this.edges.up[i]) &&
+      this.edges.left.every((pix, i) => pix == this.edges.right[i]) &&
+      this.edges.left.every((pix, i) => pix == this.edges.down[i]);
 
     if (fullySymmetric) return [this];
 
     // Opposite edges are the same
     const halfSymmetric =
-      this.edges.left.every((bit, i) => bit == this.edges.right[i]) &&
-      this.edges.up.every((bit, i) => bit == this.edges.down[i]);
+      this.edges.left.every((pix, i) => pix == this.edges.right[i]) &&
+      this.edges.up.every((pix, i) => pix == this.edges.down[i]);
 
     const amount = halfSymmetric ? 2 : 4;
 
@@ -176,7 +180,7 @@ class Cell {
     this.grid.uncollapsed.splice(index, 1);
 
     Object.values(this.neighbors).forEach((cell) => {
-      cell.update();
+      cell.updateOptions();
     });
 
     return this;
@@ -190,7 +194,7 @@ class Cell {
     this.grid.uncollapsed.push(this);
   }
 
-  compare(dir, option) {
+  checkValid(option, dir) {
     const oppEdge = {
       up: "down",
       down: "up",
@@ -198,20 +202,25 @@ class Cell {
       right: "left",
     };
 
+    // If we have a neighbor in that direction...
     if (this.neighbors[dir]?.state) {
       const myEdge = option.edges[dir];
-      const relEdge = this.neighbors[dir].state.edges[oppEdge[dir]];
+      const optEdge = this.neighbors[dir].state.edges[oppEdge[dir]];
 
-      return Cell.compareEdge(myEdge, relEdge);
+      // Check this cell's edge against the option's revelant edge
+      return Cell.compareEdge(myEdge, optEdge);
     }
 
     return true;
   }
 
-  update() {
+  updateOptions() {
+    // All available options should be filtered down to those of which...
     this.options = this.options.filter((option) => {
+      // For every cardinal direction...
       for (let i = 0; i < Grid.directions.length; i++) {
-        if (!this.compare(Grid.directions[i], option)) return false;
+        // It would be valid to place that tile in that place
+        if (!this.checkValid(option, Grid.directions[i])) return false;
       }
 
       return true;
