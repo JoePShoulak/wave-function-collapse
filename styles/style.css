@@ -4,7 +4,7 @@ html, body, header {
 }
 
 main {
-  background-color: black;
+  /* background-color: black; */
   position: absolute;
   top: 25px;
   bottom: 0;
