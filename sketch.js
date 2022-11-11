@@ -1,5 +1,9 @@
 const tileset = document.currentScript.getAttribute("tileset");
 
+const parent = document.querySelector("main");
+const width = parent.clientWidth;
+const height = parent.clientHeight;
+
 const tilesetLengths = {
   "circuit-joe": 19,
   circuit: 13,
@@ -55,16 +59,16 @@ function setup() {
   Cell.resetCallback = (cell) => drawCell(cell);
   Cell.createOptions(images);
 
-  waveFunction = new Grid(
-    floor(innerWidth * GRID_SCALE),
-    floor(innerHeight * GRID_SCALE)
-  );
-
-  createCanvas(innerWidth, innerHeight);
+  createCanvas(width, height);
   fill("black");
   background("black");
   noStroke();
   loop();
+
+  waveFunction = new Grid(
+    floor(width * GRID_SCALE),
+    floor(height * GRID_SCALE)
+  );
 }
 
 function draw() {
