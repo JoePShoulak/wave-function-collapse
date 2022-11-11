@@ -33,15 +33,15 @@ function preload() {
   // imgs = loadAllImages("test/mountains", 2);
   // imgs = loadAllImages("test/pipes", 2);
   // imgs = loadAllImages("test/rail", 7);
-  // imgs = loadAllImages("test/train-tracks", 2);
+  imgs = loadAllImages("train-tracks", 2); // works with full edge
   // imgs = loadAllImages("circuit", 13);
-  imgs = loadAllImages("circuit-joe", 18);
+  // imgs = loadAllImages("circuit-joe", 18);
   // imgs = loadAllImages("test/circuit-3", 17);
   // imgs = loadAllImages("circuit-coding-train", 13);
 }
 
 function setup() {
-  // Tile.fullEdgeDetection = true;
+  Tile.fullEdgeDetection = true;
   Cell.resetCallback = (cell) => drawCell(cell);
 
   imgs
