@@ -15,7 +15,7 @@ const tilesetLengths = {
   "test/mountains": 2,
   "test/pipes": 2,
   "test/rail": 7,
-  "test/circuit-3": 17,
+  "test/circuit-custom": 17,
 };
 
 /* == VARIABLES == */
@@ -54,6 +54,8 @@ function preload() {
   images = loadAllImages(tileset, length);
 }
 
+let waiting = false;
+
 function setup() {
   Tile.fullEdgeDetection = false;
   Cell.resetCallback = (cell) => drawCell(cell);
@@ -69,6 +71,8 @@ function setup() {
     floor(width * GRID_SCALE),
     floor(height * GRID_SCALE)
   );
+
+  waiting = false;
 }
 
 function draw() {
@@ -79,8 +83,10 @@ function draw() {
       drawCell(newCell);
       Object.values(newCell.neighbors).forEach((cell) => drawCell(cell));
     } else {
-      setTimeout(setup, LOOP_DELAY);
-      noLoop();
+      if (!waiting) {
+        setTimeout(setup, LOOP_DELAY);
+        waiting = true;
+      }
     }
   } else {
     waveFunction.collapse();
