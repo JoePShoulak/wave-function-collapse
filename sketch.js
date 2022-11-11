@@ -1,7 +1,7 @@
 /* == VARIABLES == */
 const GRID_SCALE = 1 / 3; // 1/3 is in deployment
 const SHOW_DRAW = true;
-let imgs;
+let images;
 let waveFunction;
 
 function drawCell(cell) {
@@ -27,28 +27,24 @@ const loadAllImages = (folder, number) => {
 
 /* == MAIN FUNCTIONS == */
 function preload() {
-  // imgs = loadAllImages("demo", 2);
-  // imgs = loadAllImages("polka", 2);
-  // imgs = loadAllImages("roads", 2);
-  // imgs = loadAllImages("train-tracks", 2); // works with full edge
-  // imgs = loadAllImages("circuit", 13);
-  imgs = loadAllImages("circuit-joe", 18);
-  // imgs = loadAllImages("circuit-coding-train", 13);
-  // imgs = loadAllImages("test/mountains", 2);
-  // imgs = loadAllImages("test/pipes", 2);
-  // imgs = loadAllImages("test/rail", 7);
-  // imgs = loadAllImages("test/circuit-3", 17);
+  images = loadAllImages("circuit-joe", 18);
+
+  // images = loadAllImages("demo", 2);
+  // images = loadAllImages("polka", 2);
+  // images = loadAllImages("roads", 2);
+  // images = loadAllImages("train-tracks", 2); // works with full edge
+  // images = loadAllImages("circuit", 13);
+  // images = loadAllImages("circuit-coding-train", 13);
+  // images = loadAllImages("test/mountains", 2);
+  // images = loadAllImages("test/pipes", 2);
+  // images = loadAllImages("test/rail", 7);
+  // images = loadAllImages("test/circuit-3", 17);
 }
 
 function setup() {
-  Tile.fullEdgeDetection = true;
+  Tile.fullEdgeDetection = false;
   Cell.resetCallback = (cell) => drawCell(cell);
-
-  imgs
-    .map((img) => new Tile(img))
-    .forEach((tile) => {
-      tile.allRotations().forEach((rot) => Cell.options.push(rot));
-    });
+  Cell.createOptions(images);
 
   waveFunction = new Grid(
     floor(width * GRID_SCALE),

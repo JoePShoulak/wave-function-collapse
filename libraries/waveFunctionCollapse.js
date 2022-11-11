@@ -97,38 +97,6 @@ class Tile {
     edge = edge.map((point) => rgbToHex(...this.img.get(...point)));
 
     return edge;
-
-    // Slow mode (every points per edge)
-
-    // const w = this.img.width;
-    // const h = this.img.height;
-
-    // let edge = [];
-
-    // switch (dir) {
-    //   case "up":
-    //     for (let x = 0; x < w; x++) {
-    //       edge.push(rgbToHex(...this.img.get(x, 0)));
-    //     }
-    //     break;
-    //   case "right":
-    //     for (let y = 0; y < h; y++) {
-    //       edge.push(rgbToHex(...this.img.get(w - 1, y)));
-    //     }
-    //     break;
-    //   case "down":
-    //     for (let x = w - 1; x >= 0; x--) {
-    //       edge.push(rgbToHex(...this.img.get(x, h - 1)));
-    //     }
-    //     break;
-    //   case "left":
-    //     for (let y = h - 1; y >= 0; y--) {
-    //       edge.push(rgbToHex(...this.img.get(0, y)));
-    //     }
-    //     break;
-    // }
-
-    // return edge;
   }
 
   allRotations() {
@@ -180,6 +148,14 @@ class Cell {
   static compareEdge(myEdge, relEdge) {
     const res = myEdge.every((bit, i) => bit == [...relEdge].reverse()[i]);
     return res;
+  }
+
+  static createOptions(images) {
+    images
+      .map((img) => new Tile(img))
+      .forEach((tile) => {
+        tile.allRotations().forEach((rot) => Cell.options.push(rot));
+      });
   }
 
   constructor(x, y, grid) {
