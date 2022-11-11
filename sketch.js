@@ -1,4 +1,5 @@
 const tileset = document.currentScript.getAttribute("tileset");
+const mode = document.currentScript.getAttribute("mode");
 
 const parent = document.querySelector("main");
 const width = parent.clientWidth;
@@ -22,19 +23,25 @@ const tilesetLengths = {
 const GRID_SCALE = 1 / 40; // 1/3 is in deployment
 const SHOW_DRAW = true;
 const LOOP_DELAY = 10 * 1000; // ms
+
 let images;
 let waveFunction;
+let waiting = false;
 
 /* == HELPER FUNCTION == */
 function drawCell(cell) {
   const w = width / waveFunction.width;
   const h = height / waveFunction.height;
 
-  const img = cell.state?.img;
-  const pos = [cell.x * w, cell.y * h];
-  const size = [w, h];
+  const cells = [cell, ...Object.values(cell.neighbors)];
 
-  img ? image(img, ...pos, ...size) : rect(...pos, ...size);
+  cells.forEach((cell) => {
+    const img = cell.state?.img;
+    const pos = [cell.x * w, cell.y * h];
+    const size = [w, h];
+
+    img ? image(img, ...pos, ...size) : rect(...pos, ...size);
+  });
 }
 
 const loadAllImages = (folder, number) => {
@@ -54,10 +61,8 @@ function preload() {
   images = loadAllImages(tileset, length);
 }
 
-let waiting = false;
-
 function setup() {
-  Tile.fullEdgeDetection = false;
+  Tile.fullEdgeDetection = mode == "complex";
   Cell.resetCallback = (cell) => drawCell(cell);
   Cell.createOptions(images);
 
@@ -65,27 +70,30 @@ function setup() {
   fill("black");
   background("black");
   noStroke();
-  loop();
 
   waveFunction = new Grid(
     floor(width * GRID_SCALE),
     floor(height * GRID_SCALE)
   );
+}
 
+function reset() {
+  background("black");
+  waveFunction.reset();
   waiting = false;
+  loop();
 }
 
 function draw() {
   if (SHOW_DRAW) {
     if (!waveFunction.collapsed) {
       const newCell = waveFunction.observe();
-
       drawCell(newCell);
-      Object.values(newCell.neighbors).forEach((cell) => drawCell(cell));
     } else {
       if (!waiting) {
-        setTimeout(setup, LOOP_DELAY);
+        setTimeout(reset, LOOP_DELAY);
         waiting = true;
+        noLoop();
       }
     }
   } else {
