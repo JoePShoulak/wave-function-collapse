@@ -1,5 +1,6 @@
 /* == VARIABLES == */
 const GRID_SCALE = 1 / 3; // 1/3 is in deployment
+const SHOW_DRAW = true;
 let imgs;
 let waveFunction;
 
@@ -33,12 +34,16 @@ function preload() {
   // imgs = loadAllImages("test/pipes", 2);
   // imgs = loadAllImages("test/rail", 7);
   // imgs = loadAllImages("test/train-tracks", 2);
-  imgs = loadAllImages("circuit", 13);
-  // imgs = loadAllImages("test/circuit-2", 13);
+  // imgs = loadAllImages("circuit", 13);
+  imgs = loadAllImages("circuit-joe", 17);
+  // imgs = loadAllImages("test/circuit-3", 17);
   // imgs = loadAllImages("circuit-coding-train", 13);
 }
 
 function setup() {
+  // Tile.fullEdgeDetection = true;
+  Cell.resetCallback = (cell) => drawCell(cell);
+
   imgs
     .map((img) => new Tile(img))
     .forEach((tile) => {
@@ -50,8 +55,6 @@ function setup() {
     floor(height * GRID_SCALE)
   );
 
-  Cell.resetCallback = (cell) => drawCell(cell);
-
   createCanvas(innerWidth, innerHeight);
   fill("black");
   background("black");
@@ -59,16 +62,16 @@ function setup() {
 }
 
 function draw() {
-  // Draw Every change
-  const newCell = waveFunction.observe();
+  if (SHOW_DRAW) {
+    const newCell = waveFunction.observe();
 
-  drawCell(newCell);
-  Object.values(newCell.neighbors).forEach((cell) => drawCell(cell));
+    drawCell(newCell);
+    Object.values(newCell.neighbors).forEach((cell) => drawCell(cell));
 
-  if (waveFunction.collapsed) noLoop();
-
-  // Solve first, then draw
-  // noLoop();
-  // waveFunction.collapse();
-  // waveFunction.cells.forEach((cell) => drawCell(cell));
+    if (waveFunction.collapsed) noLoop();
+  } else {
+    waveFunction.collapse();
+    waveFunction.cells.forEach((cell) => drawCell(cell));
+    noLoop();
+  }
 }

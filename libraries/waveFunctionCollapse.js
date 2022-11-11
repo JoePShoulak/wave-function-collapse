@@ -20,6 +20,8 @@ const rgbToHex = (r, g, b, _a) => {
 
 /* == TILE CLASS == */
 class Tile {
+  static fullEdgeDetection = false;
+
   constructor(img, edges = null) {
     this.img = img;
     this.img.loadPixels();
@@ -35,10 +37,38 @@ class Tile {
   }
 
   edgeFromImg(dir) {
+    // Fast mode (3 points per edge)
     const w = this.img.width;
     const h = this.img.height;
 
-    let points = [];
+    let edge = [];
+
+    if (Tile.fullEdgeDetection) {
+      switch (dir) {
+        case "up":
+          for (let x = 0; x < w; x++) {
+            edge.push(rgbToHex(...this.img.get(x, 0)));
+          }
+          break;
+        case "right":
+          for (let y = 0; y < h; y++) {
+            edge.push(rgbToHex(...this.img.get(w - 1, y)));
+          }
+          break;
+        case "down":
+          for (let x = w - 1; x >= 0; x--) {
+            edge.push(rgbToHex(...this.img.get(x, h - 1)));
+          }
+          break;
+        case "left":
+          for (let y = h - 1; y >= 0; y--) {
+            edge.push(rgbToHex(...this.img.get(0, y)));
+          }
+          break;
+      }
+
+      return edge;
+    }
 
     const NW = [1, 1];
     const NN = [w / 2, 1];
@@ -51,27 +81,29 @@ class Tile {
 
     switch (dir) {
       case "up":
-        points = [NW, NN, NE];
+        edge = [NW, NN, NE];
         break;
       case "right":
-        points = [NE, EE, SE];
+        edge = [NE, EE, SE];
         break;
       case "down":
-        points = [SE, SS, SW];
+        edge = [SE, SS, SW];
         break;
       case "left":
-        points = [SW, WW, NW];
+        edge = [SW, WW, NW];
         break;
     }
 
-    return points.map((point) => rgbToHex(...this.img.get(...point)));
+    edge = edge.map((point) => rgbToHex(...this.img.get(...point)));
 
-    // TODO This doesn't yet work for tiles/circuit-2/10.png, and I don't know if it's the code or tile
+    return edge;
+
+    // Slow mode (every points per edge)
 
     // const w = this.img.width;
     // const h = this.img.height;
 
-    // const edge = [];
+    // let edge = [];
 
     // switch (dir) {
     //   case "up":
