@@ -35,7 +35,7 @@ function preload() {
   // imgs = loadAllImages("test/rail", 7);
   // imgs = loadAllImages("test/train-tracks", 2);
   // imgs = loadAllImages("circuit", 13);
-  imgs = loadAllImages("circuit-joe", 17);
+  imgs = loadAllImages("circuit-joe", 18);
   // imgs = loadAllImages("test/circuit-3", 17);
   // imgs = loadAllImages("circuit-coding-train", 13);
 }
