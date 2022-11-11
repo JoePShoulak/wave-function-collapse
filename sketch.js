@@ -30,14 +30,14 @@ function preload() {
   // imgs = loadAllImages("demo", 2);
   // imgs = loadAllImages("polka", 2);
   // imgs = loadAllImages("roads", 2);
+  // imgs = loadAllImages("train-tracks", 2); // works with full edge
+  // imgs = loadAllImages("circuit", 13);
+  imgs = loadAllImages("circuit-joe", 18);
+  // imgs = loadAllImages("circuit-coding-train", 13);
   // imgs = loadAllImages("test/mountains", 2);
   // imgs = loadAllImages("test/pipes", 2);
   // imgs = loadAllImages("test/rail", 7);
-  imgs = loadAllImages("train-tracks", 2); // works with full edge
-  // imgs = loadAllImages("circuit", 13);
-  // imgs = loadAllImages("circuit-joe", 18);
   // imgs = loadAllImages("test/circuit-3", 17);
-  // imgs = loadAllImages("circuit-coding-train", 13);
 }
 
 function setup() {
