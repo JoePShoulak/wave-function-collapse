@@ -37,7 +37,7 @@ const loadAllImages = (folder, number) => {
   const imgs = [];
 
   for (let i = 0; i < number; i++) {
-    imgs.push(loadImage(`/tiles/${folder}/${i}.png`));
+    imgs.push(loadImage(`../tiles/${folder}/${i}.png`));
   }
 
   return imgs;
