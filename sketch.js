@@ -1,7 +1,7 @@
 /* == VARIABLES == */
 const GRID_SCALE = 1 / 3; // 1/3 is in deployment
 const SHOW_DRAW = true;
-const LOOP_DELAY = 10 * 1000; //ms
+const LOOP_DELAY = 10 * 1000; // ms
 let images;
 let waveFunction;
 
@@ -28,13 +28,13 @@ const loadAllImages = (folder, number) => {
 
 /* == MAIN FUNCTIONS == */
 function preload() {
-  images = loadAllImages("circuit-joe", 19);
+  // images = loadAllImages("circuit-joe", 19);
 
   // images = loadAllImages("demo", 2);
   // images = loadAllImages("polka", 2);
   // images = loadAllImages("roads", 2);
   // images = loadAllImages("train-tracks", 2); // works with full edge
-  // images = loadAllImages("circuit", 13);
+  images = loadAllImages("circuit", 13);
   // images = loadAllImages("circuit-coding-train", 13);
   // images = loadAllImages("test/mountains", 2);
   // images = loadAllImages("test/pipes", 2);
