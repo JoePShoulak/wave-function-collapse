@@ -53,6 +53,20 @@ const loadAllImages = (folder, number) => {
   return imgs;
 };
 
+function rotateImg(img, amount) {
+  const w = img.width;
+  const h = img.height;
+
+  const newImg = createGraphics(w, h);
+
+  newImg.imageMode(CENTER);
+  newImg.translate(w / 2, h / 2);
+  newImg.rotate(HALF_PI * amount);
+  newImg.image(img, 0, 0);
+
+  return new Tile(newImg);
+}
+
 /* == MAIN FUNCTIONS == */
 
 function preload() {
@@ -61,6 +75,7 @@ function preload() {
 }
 
 function setup() {
+  Tile.rotateImg = rotateImg;
   Tile.fullEdgeDetection = mode == "complex";
   Cell.resetCallback = (cell) => drawCell(cell);
   Cell.setOptions(images);

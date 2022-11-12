@@ -22,6 +22,13 @@ const rgbToHex = (r, g, b, _a) => {
 class Tile {
   static fullEdgeDetection = false;
 
+  // Must be set in sketch with access to p5
+  static rotateImg(_img, _amount) {
+    console.error(
+      "Tile.rotateImg is not defined by default. Set this in your sketch to work properly."
+    );
+  }
+
   constructor(img) {
     this.img = img;
     this.img.loadPixels();
@@ -122,24 +129,10 @@ class Tile {
     const amount = halfSymmetric ? 2 : 4;
 
     for (let i = 0; i < amount; i++) {
-      rotations.push(this.rotate(i));
+      rotations.push(Tile.rotateImg(this.img, i));
     }
 
     return rotations;
-  }
-
-  rotate(amount) {
-    const w = this.img.width;
-    const h = this.img.height;
-
-    const newImg = createGraphics(w, h);
-
-    newImg.imageMode(CENTER);
-    newImg.translate(w / 2, h / 2);
-    newImg.rotate(HALF_PI * amount);
-    newImg.image(this.img, 0, 0);
-
-    return new Tile(newImg);
   }
 }
 
