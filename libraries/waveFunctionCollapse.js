@@ -25,7 +25,7 @@ class Tile {
   // Must be set in sketch with access to p5
   static rotateImg(_img, _amount) {
     console.error(
-      "Tile.rotateImg is not defined by default. Set this in your sketch to work properly."
+      "Tile.rotateImg is not defined by default. Set this in your sketch for proper functionality."
     );
   }
 
