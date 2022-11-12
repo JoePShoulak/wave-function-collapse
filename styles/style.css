@@ -1,3 +1,8 @@
+* {
+  font-family: 'Cantarell', sans-serif;
+  font-family: 'Roboto', sans-serif
+}
+
 html, body, header {
   margin: 0;
   padding: 0;
@@ -9,6 +14,12 @@ main {
   top: 25px;
   bottom: 0;
   width: 100%
+}
+
+h1 {padding: 25px;}
+
+article {
+  margin: 25px;
 }
 
 canvas {

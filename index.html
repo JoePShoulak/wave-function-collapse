@@ -6,41 +6,145 @@
 
     <title>WFC - Home</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" type="text/css" href="styles/style.css" />
   </head>
 
   <body>
     <h1>Wave Function Collapse</h1>
-    <h3>What is that?</h3>
+    <article>
+      <h3>What is that?</h3>
 
-    <p>
-      Wave Function Collapse is an algorithm that alows us to, for example,
-      generate an image made of a tiling of smaller images with rules for which
-      images may be adjacent. By guessing where we have to and updating our
-      neighbors' legal options after each guess, we're able to generate a
-      reasonable potential image. By identifying and correcting any eventual
-      mistakes, we can assure the final product is a "legal" image.
-    </p>
+      <p>
+        Wave Function Collapse is an algorithm that alows us to, for example,
+        generate an image made of a tiling of smaller images with rules for
+        which images may be adjacent. By guessing where we have to and updating
+        our neighbors' legal options after each guess, we're able to generate a
+        reasonable potential image. By identifying and correcting any eventual
+        mistakes, we can assure the final product is a "legal" image.
+      </p>
+      <p>
+        The algorithm gets its name from Quantum Mechanics, where our cells are
+        in superposition of multiple states, and by observing our cells we are
+        able to collapse that superposition, revealing more information about
+        the state of the cells around us, and eventually leading to the entropic
+        collapse of the entire system.
+      </p>
 
-    <h3>Uh huh... Yeah, I know some of those words...</h3>
+      <h3>Uh huh... Yeah, I know some of those words...</h3>
 
-    <p>
-      Err, right. Yeah. This is more of a visua thing. Luckily, I have visuals!
-    </p>
+      <p>
+        Err, right. Yeah. This is more of a visual thing. Luckily, I have
+        visuals! Check these out and we'll keep talking about this after.
+      </p>
 
-    <h4>Simple</h4>
-    <ul>
-      <li><a href="wfc/lines.html">Lines</a></li>
-      <li><a href="wfc/polka.html">Polka</a></li>
-      <li><a href="wfc/roads.html">Roads</a></li>
-      <li><a href="wfc/train-tracks.html">Train Tracks</a></li>
-    </ul>
+      <h4>Simple</h4>
+      <ul>
+        <li><a href="wfc/lines.html">Lines</a></li>
+        <li><a href="wfc/polka.html">Polka</a></li>
+        <li><a href="wfc/roads.html">Roads</a></li>
+        <li><a href="wfc/train-tracks.html">Train Tracks</a></li>
+      </ul>
 
-    <h4>Complex</h4>
-    <ul>
-      <li><a href="wfc/circuit-original.html">Circuit - Original</a></li>
-      <li><a href="wfc/circuit-modified.html">Circuit - Modified</a></li>
-      <li><a href="wfc/circuit-custom.html">Circuit - Custom</a></li>
-    </ul>
+      <h4>Complex</h4>
+      <ul>
+        <li><a href="wfc/circuit-original.html">Circuit - Original</a></li>
+        <li><a href="wfc/circuit-modified.html">Circuit - Modified</a></li>
+        <li><a href="wfc/circuit-custom.html">Circuit - Custom</a></li>
+      </ul>
+
+      <h3>Okay, I saw what was happening... tell me what that means again?</h3>
+      <p>So the process goes like this:</p>
+      <h4>The Setup</h4>
+      <ol>
+        <li>
+          Define a grid that's X units by Y units, called "cells". This will
+          hold our images eventually.
+        </li>
+        <li>
+          Define a set of possible images for our options called "tiles", as
+          well as the rules for how these tiles can connect to each other.
+        </li>
+        <li>
+          Tell every cell in the grid that, by default, they are allowed to be
+          any of the options.
+        </li>
+      </ol>
+      <h4>The Algorithm</h4>
+      <p>
+        Now that we've set up our system, we can perform our algorithm over and
+        over until our system is solved.
+      </p>
+      <ol>
+        <li>
+          Find the cell with the smallest number of available options.
+          <ul>
+            <li>If there's several tied for the lowest, pick one at random.</li>
+          </ul>
+        </li>
+        <li>
+          "Collapse" the cell by assigning its state to one of its options at
+          random.
+        </li>
+        <li>
+          Tell all the neighbor cells their list of legal options is now reduced
+          to those matching this new cell.
+          <ul>
+            <li>
+              If any of those neighbors have their options reduced to zero,
+              reset that neighbor and all of its neighbors.
+            </li>
+          </ul>
+        </li>
+        <li>Repeat until all cells have been collapsed!</li>
+      </ol>
+
+      <h3>How do the tiles know what they're alowed to be next to?</h3>
+      <p>
+        Great question! You can provide rules for the tiles that explicitly say
+        which tile edges are allowed to go next to each other. My code checks
+        the pixels on the edges of the images and stores that to compare against
+        the other images, so it detects the rules automatically!
+      </p>
+      <p>
+        This doesn't always work: not all tilesets can have their rules
+        explained perfectly by a single method. Or at least, if there is one
+        such method, I haven't found it yet. But so long as the edges of each
+        matched image are identical, this algorithm will understand that as a
+        rule.
+      </p>
+
+      <h3>
+        Got it... I think. Is this useful though? It definitely looks cool...
+      </h3>
+      <p>
+        Yes! I mean, maybe not to everyone, but we can definitely find places
+        where this algorithm could come in handy. One example is creating video
+        game textures! Maybe you want to have a bunch of backgrounds for your
+        levels that should be similar, but not the same. Instead of sitting
+        there arranging all the tiles by hand!
+      </p>
+      <p>
+        Let's come up with a more entertaining example though. What if instead
+        of watching these images get drawn, we hid the whole process, and before
+        revealing the image, we rotated some of the tiles and allowed the user
+        to rotate them back by clicking.
+      </p>
+      <p>
+        Because we're generating the picture according to the tile rules, we can
+        be sure we'll always have a solvable puzzle as opposed to randomly
+        placing random tiles in random directions.
+      </p>
+      <p>
+        Oh and look! That game we just talked about is right here!
+        <a href="#">Not Yet Implemented</a>
+      </p>
+    </article>
   </body>
 </html>
