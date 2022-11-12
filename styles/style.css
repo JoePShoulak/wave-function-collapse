@@ -16,10 +16,14 @@ main {
   width: 100%
 }
 
-h1 {padding: 25px;}
+h1 {
+  margin: auto;
+  width: 50%
+}
 
 article {
-  margin: 25px;
+  margin: auto;
+  width: 50%
 }
 
 canvas {
