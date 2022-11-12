@@ -8,7 +8,7 @@ const height = parent.clientHeight;
 const tilesetLengths = {
   "circuit-joe": 19,
   circuit: 13,
-  demo: 2,
+  lines: 2,
   polka: 2,
   roads: 2,
   "train-tracks": 2, // works with full edge
