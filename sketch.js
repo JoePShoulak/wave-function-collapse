@@ -1,5 +1,4 @@
 const tileset = document.currentScript.getAttribute("tileset");
-const mode = document.currentScript.getAttribute("mode");
 
 const parent = document.querySelector("main");
 const width = parent.clientWidth;
@@ -18,6 +17,18 @@ const tilesetLengths = {
   "test/rail": 7,
   "circuit-custom": 17,
 };
+
+const tilesetModes = {
+  "circuit-joe": "complex",
+  circuit: "simple",
+  lines: "simple",
+  polka: "simple",
+  roads: "simple",
+  "train-tracks": "complex",
+  "circuit-coding-train": "simple",
+  "circuit-custom": "complex",
+};
+const mode = tilesetModes[tileset];
 
 /* == VARIABLES == */
 const GRID_SCALE = 1 / 40; // 1/3 is in deployment
