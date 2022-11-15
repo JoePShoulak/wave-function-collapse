@@ -4,31 +4,17 @@ const parent = document.querySelector("main");
 const width = parent.clientWidth;
 const height = parent.clientHeight;
 
-const tilesetLengths = {
-  "circuit-joe": 19,
-  circuit: 13,
-  lines: 2,
-  polka: 2,
-  roads: 2,
-  "train-tracks": 2, // works with full edge
-  "circuit-coding-train": 13,
-  "test/mountains": 2,
-  "test/pipes": 2,
-  "test/rail": 7,
-  "circuit-custom": 17,
+const tilesetDict = {
+  "circuit-joe": { mode: "complex", length: 19 },
+  circuit: { mode: "simple", length: 13 },
+  lines: { mode: "simple", length: 2 },
+  polka: { mode: "simple", length: 2 },
+  roads: { mode: "simple", length: 2 },
+  "train-tracks": { mode: "complex", length: 2 },
+  "circuit-coding-train": { mode: "simple", length: 13 },
+  "circuit-custom": { mode: "complex", length: 17 },
 };
-
-const tilesetModes = {
-  "circuit-joe": "complex",
-  circuit: "simple",
-  lines: "simple",
-  polka: "simple",
-  roads: "simple",
-  "train-tracks": "complex",
-  "circuit-coding-train": "simple",
-  "circuit-custom": "complex",
-};
-const mode = tilesetModes[tileset];
+const mode = tilesetDict[tileset].mode;
 
 /* == VARIABLES == */
 const GRID_SCALE = 1 / 40; // 1/3 is in deployment
@@ -81,7 +67,7 @@ function rotateImg(img, amount) {
 /* == MAIN FUNCTIONS == */
 
 function preload() {
-  const length = tilesetLengths[tileset];
+  const length = tilesetDict[tileset].length;
   images = loadAllImages(tileset, length);
 }
 
