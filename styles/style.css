@@ -29,6 +29,18 @@ article {
   width: 50%
 }
 
+@media only screen and (max-width: 1200px) {
+  article {
+    width: 75%
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  article {
+    width: 100%
+  }
+}
+
 canvas {
   display: block;
 }
