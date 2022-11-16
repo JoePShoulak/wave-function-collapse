@@ -1,8 +1,5 @@
 const tileset = document.currentScript.getAttribute("tileset");
-
 const parent = document.querySelector("main");
-let width = parent.clientWidth;
-let height = parent.clientHeight;
 
 const tilesetDict = {
   "circuit-joe": { mode: "complex", length: 19 },
@@ -22,6 +19,8 @@ const LOOP_DELAY = 10 * 1000; // ms
 const mode = tilesetDict[tileset].mode;
 let images;
 let waveFunction;
+let width;
+let height;
 
 /* == HELPER FUNCTION == */
 function drawCell(cell) {
@@ -65,9 +64,6 @@ function rotateImg(img, amount) {
 
 /* == MAIN FUNCTIONS == */
 function windowResized() {
-  width = parent.clientWidth;
-  height = parent.clientHeight;
-  loop();
   setup();
 }
 
@@ -85,6 +81,10 @@ function preload() {
 }
 
 function setup() {
+  width = parent.clientWidth;
+  height = parent.clientHeight;
+  const gridSize = [width, height].map((n) => floor(n * GRID_SCALE));
+
   Tile.rotateImg = rotateImg;
   Tile.fullEdgeDetection = mode == "complex";
   Cell.resetCallback = (cell) => drawCell(cell);
@@ -94,11 +94,9 @@ function setup() {
   fill("black");
   background("black");
   noStroke();
+  loop();
 
-  waveFunction = new Grid(
-    floor(width * GRID_SCALE),
-    floor(height * GRID_SCALE)
-  );
+  waveFunction = new Grid(...gridSize);
 }
 
 function draw() {
