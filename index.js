@@ -4,8 +4,9 @@ function loadSketch(page) {
   frame.src = `wfc/${page}.html`;
 }
 
-const buttons = document
-  .getElementsByClassName("sketch-button")
-  .forEach((element) => {
-    element.addEventListener("click", () => loadSketch(element.id));
-  });
+const collection = document.getElementsByClassName("sketch-button");
+const buttons = Array.prototype.slice.call(collection, 0);
+
+buttons.forEach((element) => {
+  element.addEventListener("click", () => loadSketch(element.id));
+});
