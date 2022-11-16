@@ -9,6 +9,6 @@ function loadScript(tileset) {
   demoDiv.appendChild(script);
 }
 
-loadScript("circuit");
+// loadScript("circuit");
 
-// circuitButton.addEventListener("click", () => loadScript("circuit"));
+circuitButton.addEventListener("click", () => loadScript("circuit"));
