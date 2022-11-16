@@ -1,5 +1,13 @@
+/* == VARIABLES == */
 const tileset = document.currentScript.getAttribute("tileset");
 const parent = document.querySelector("main");
+const GRID_SCALE = 1 / 40; // 1/3 is in deployment
+const SHOW_DRAW = true;
+const LOOP_DELAY = 10 * 1000; // ms
+let images;
+let waveFunction;
+let width;
+let height;
 
 const tilesetDict = {
   "circuit-joe": { mode: "complex", length: 19 },
@@ -11,15 +19,6 @@ const tilesetDict = {
   "circuit-coding-train": { mode: "simple", length: 13 },
   "circuit-custom": { mode: "complex", length: 17 },
 };
-
-/* == VARIABLES == */
-const GRID_SCALE = 1 / 40; // 1/3 is in deployment
-const SHOW_DRAW = true;
-const LOOP_DELAY = 10 * 1000; // ms
-let images;
-let waveFunction;
-let width;
-let height;
 
 /* == HELPER FUNCTION == */
 const cellAndNeighbors = (cell) => [cell, ...Object.values(cell.neighbors)];
@@ -86,14 +85,13 @@ function setup() {
   Tile.fullEdgeDetection = tilesetDict[tileset].mode == "complex";
   Cell.resetCallback = (cell) => drawCell(cell);
   Cell.setOptions(images);
+  waveFunction = new Grid(...gridSize);
 
   createCanvas(width, height);
   fill("black");
   background("black");
   noStroke();
   loop();
-
-  waveFunction = new Grid(...gridSize);
 }
 
 function draw() {
