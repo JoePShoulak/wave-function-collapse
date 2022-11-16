@@ -10,17 +10,17 @@ let width;
 let height;
 
 const tilesetDict = {
-  "circuit-joe": { mode: "complex", length: 19 },
-  circuit: { mode: "simple", length: 13 },
-  lines: { mode: "simple", length: 2 },
-  polka: { mode: "simple", length: 2 },
-  roads: { mode: "simple", length: 2 },
-  "train-tracks": { mode: "complex", length: 2 },
-  "circuit-coding-train": { mode: "simple", length: 13 },
-  "circuit-custom": { mode: "complex", length: 17 },
+  "circuit-joe": { complex: true, length: 19 },
+  circuit: { complex: false, length: 13 },
+  lines: { complex: false, length: 2 },
+  polka: { complex: false, length: 2 },
+  roads: { complex: false, length: 2 },
+  "train-tracks": { complex: true, length: 2 },
+  "circuit-coding-train": { complex: false, length: 13 },
+  "circuit-custom": { complex: true, length: 17 },
 };
 
-/* == HELPER FUNCTION == */
+/* == HELPER FUNCTIONS == */
 const cellAndNeighbors = (cell) => [cell, ...Object.values(cell.neighbors)];
 
 function drawCell(cell) {
@@ -30,9 +30,8 @@ function drawCell(cell) {
   cellAndNeighbors(cell).forEach((cell) => {
     const img = cell.state?.img;
     const pos = [cell.x * w, cell.y * h];
-    const size = [w, h];
 
-    img ? image(img, ...pos, ...size) : rect(...pos, ...size);
+    img ? image(img, ...pos, w, h) : rect(...pos, w, h);
   });
 }
 
@@ -65,7 +64,6 @@ function reset() {
   noLoop();
   setTimeout(() => {
     if (isLooping()) return;
-
     waveFunction.reset();
     background("black");
     loop();
@@ -82,7 +80,7 @@ function setup() {
   const gridSize = [width, height].map((n) => floor(n * GRID_SCALE));
 
   Tile.rotateImg = rotateImg;
-  Tile.fullEdgeDetection = tilesetDict[tileset].mode == "complex";
+  Tile.fullEdgeDetection = tilesetDict[tileset].complex;
   Cell.resetCallback = (cell) => drawCell(cell);
   Cell.setOptions(images);
   waveFunction = new Grid(...gridSize);
