@@ -72,7 +72,7 @@ function windowResized() {
 }
 
 function reset() {
-  if (_loop) return;
+  if (isLooping()) return;
 
   background("black");
   waveFunction.reset();
