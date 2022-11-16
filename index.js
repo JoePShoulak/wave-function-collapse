@@ -1,6 +1,6 @@
 const buttons = Array.from(document.getElementsByClassName("sketch-button"));
-const frame = document.getElementById("demo-iframe");
+const frame = document.getElementById("demo");
 
-const loadSketch = (e) => (frame.src = `wfc/${e.target.id}.html`);
+const updateFrame = (e) => (frame.src = `demo/${e.target.id}.html`);
 
-buttons.forEach((btn) => btn.addEventListener("click", loadSketch));
+buttons.forEach((btn) => btn.addEventListener("click", updateFrame));
