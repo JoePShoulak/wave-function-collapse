@@ -1,11 +1,11 @@
 var sketch = (p5) => {
   const tileset = document.currentScript.getAttribute("tileset");
 
-  const parent = document.querySelector("#demo");
-  const width = 500;
-  const height = 500;
+  // const parent = document.querySelector("#demo");
   // const width = parent.clientWidth;
   // const height = parent.clientHeight;
+  const width = 500;
+  const height = 500;
 
   const tilesetDict = {
     "circuit-joe": { mode: "complex", length: 19 },
@@ -113,5 +113,7 @@ var sketch = (p5) => {
   };
 };
 
-if (myP5) myP5.remove();
+if (myP5) {
+  myP5.remove();
+}
 var myP5 = new p5(sketch);
