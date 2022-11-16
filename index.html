@@ -56,23 +56,31 @@
         visuals! Check these out and we'll keep talking about this after.
       </p>
 
-      <h4>Simple</h4>
-      <ul>
-        <li><a href="wfc/lines.html">Lines</a></li>
-        <li><a href="wfc/polka.html">Polka</a></li>
-        <li><a href="wfc/roads.html">Roads</a></li>
-        <li><a href="wfc/train-tracks.html">Train Tracks</a></li>
+      <h4>Tilesets</h4>
+      <ul id="sketch-buttons">
+        <li><button class="sketch-button" id="lines">Lines</button></li>
+        <li><button class="sketch-button" id="polka">Polka</button></li>
+        <li><button class="sketch-button" id="roads">Roads</button></li>
+        <li>
+          <button class="sketch-button" id="train-tracks">Train Tracks</button>
+        </li>
+        <li>
+          <button class="sketch-button" id="circuit-original">
+            Circuit - Original
+          </button>
+        </li>
+        <li>
+          <button class="sketch-button" id="circuit-modified">
+            Circuit - Modified
+          </button>
+        </li>
+        <li>
+          <button class="sketch-button" id="circuit-custom">
+            Circuit - Custom
+          </button>
+        </li>
       </ul>
-      <div id="demo">
-        <!-- <script src="scripts/demo.js" tileset="circuit"></script> -->
-      </div>
-
-      <h4>Complex</h4>
-      <ul>
-        <li><button id="circuit">Circuit - Original</button></li>
-        <li><button id="circuit-modified">Circuit - Modified</button></li>
-        <li><a href="wfc/circuit-custom.html">Circuit - Custom</a></li>
-      </ul>
+      <iframe id="demo-iframe" src="wfc/circuit-original.html"></iframe>
 
       <h3>Okay, I saw what was happening... tell me what that means again?</h3>
       <p>So the process goes like this:</p>

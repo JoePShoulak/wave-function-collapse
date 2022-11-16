@@ -32,3 +32,16 @@ article {
 canvas {
   display: block;
 }
+
+iframe {
+  width: 500px;
+  height: 500px;
+}
+
+#sketch-buttons {
+  list-style: none;
+}
+
+#sketch-buttons li {
+  padding: 5px
+}

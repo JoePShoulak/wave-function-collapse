@@ -1,16 +1,11 @@
-const demoDiv = document.getElementById("demo");
-const circuitButton = document.getElementById("circuit");
-const circuitModButton = document.getElementById("circuit-modified");
+const frame = document.getElementById("demo-iframe");
 
-function loadScript(tileset) {
-  while (demoDiv.firstChild) demoDiv.removeChild(demoDiv.firstChild);
-
-  const script = document.createElement("script");
-  script.src = "scripts/demo.js";
-  script.type = "text/javascript";
-  script.setAttribute("tileset", tileset);
-  demoDiv.appendChild(script);
+function loadSketch(page) {
+  frame.src = `wfc/${page}.html`;
 }
 
-circuitButton.addEventListener("click", () => loadScript("circuit"));
-circuitModButton.addEventListener("click", () => loadScript("circuit-joe"));
+const buttons = document
+  .getElementsByClassName("sketch-button")
+  .forEach((element) => {
+    element.addEventListener("click", () => loadSketch(element.id));
+  });
