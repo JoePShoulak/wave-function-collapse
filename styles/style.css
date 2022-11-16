@@ -9,6 +9,13 @@ html, body, header {
   background-color: #ddd;
 }
 
+main {
+  /* background-color: black; */
+  position: absolute;
+  top: 0px;
+  bottom: 0;
+  width: 100%
+}
 
 h1 {
   margin: auto;
@@ -28,7 +35,7 @@ canvas {
 
 iframe {
   width: 500px;
-  height: 476px;
+  height: 500px;
 }
 
 #sketch-buttons {
