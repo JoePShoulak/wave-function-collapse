@@ -1,12 +1,9 @@
 const frame = document.getElementById("demo-iframe");
 
-function loadSketch(page) {
-  frame.src = `wfc/${page}.html`;
-}
+const loadSketch = (page) => (frame.src = `wfc/${page}.html`);
 
-const collection = document.getElementsByClassName("sketch-button");
-const buttons = Array.prototype.slice.call(collection, 0);
+const buttons = document.getElementsByClassName("sketch-button");
 
-buttons.forEach((element) => {
-  element.addEventListener("click", () => loadSketch(element.id));
+Array.from(buttons).forEach((btn) => {
+  btn.addEventListener("click", () => loadSketch(btn.id));
 });
