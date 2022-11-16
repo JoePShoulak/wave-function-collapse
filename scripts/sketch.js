@@ -1,8 +1,8 @@
 const tileset = document.currentScript.getAttribute("tileset");
 
 const parent = document.querySelector("main");
-const width = parent.clientWidth;
-const height = parent.clientHeight;
+let width = parent.clientWidth;
+let height = parent.clientHeight;
 
 const tilesetDict = {
   "circuit-joe": { mode: "complex", length: 19 },
@@ -64,7 +64,16 @@ function rotateImg(img, amount) {
 }
 
 /* == MAIN FUNCTIONS == */
+function windowResized() {
+  width = parent.clientWidth;
+  height = parent.clientHeight;
+  loop();
+  setup();
+}
+
 function reset() {
+  if (_loop) return;
+
   background("black");
   waveFunction.reset();
   loop();
