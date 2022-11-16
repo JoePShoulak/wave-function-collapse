@@ -16,20 +16,19 @@ const tilesetDict = {
 const GRID_SCALE = 1 / 40; // 1/3 is in deployment
 const SHOW_DRAW = true;
 const LOOP_DELAY = 10 * 1000; // ms
-const mode = tilesetDict[tileset].mode;
 let images;
 let waveFunction;
 let width;
 let height;
 
 /* == HELPER FUNCTION == */
+const cellAndNeighbors = (cell) => [cell, ...Object.values(cell.neighbors)];
+
 function drawCell(cell) {
   const w = width / waveFunction.width;
   const h = height / waveFunction.height;
 
-  const cells = [cell, ...Object.values(cell.neighbors)];
-
-  cells.forEach((cell) => {
+  cellAndNeighbors(cell).forEach((cell) => {
     const img = cell.state?.img;
     const pos = [cell.x * w, cell.y * h];
     const size = [w, h];
@@ -39,13 +38,9 @@ function drawCell(cell) {
 }
 
 const loadAllImages = (folder, number) => {
-  const imgs = [];
+  const imgs = [...Array(number).keys()];
 
-  for (let i = 0; i < number; i++) {
-    imgs.push(loadImage(`../tiles/${folder}/${i}.png`));
-  }
-
-  return imgs;
+  return imgs.map((i) => loadImage(`../tiles/${folder}/${i}.png`));
 };
 
 function rotateImg(img, amount) {
@@ -68,16 +63,18 @@ function windowResized() {
 }
 
 function reset() {
-  if (isLooping()) return;
+  noLoop();
+  setTimeout(() => {
+    if (isLooping()) return;
 
-  background("black");
-  waveFunction.reset();
-  loop();
+    waveFunction.reset();
+    background("black");
+    loop();
+  }, LOOP_DELAY);
 }
 
 function preload() {
-  const length = tilesetDict[tileset].length;
-  images = loadAllImages(tileset, length);
+  images = loadAllImages(tileset, tilesetDict[tileset].length);
 }
 
 function setup() {
@@ -86,7 +83,7 @@ function setup() {
   const gridSize = [width, height].map((n) => floor(n * GRID_SCALE));
 
   Tile.rotateImg = rotateImg;
-  Tile.fullEdgeDetection = mode == "complex";
+  Tile.fullEdgeDetection = tilesetDict[tileset].mode == "complex";
   Cell.resetCallback = (cell) => drawCell(cell);
   Cell.setOptions(images);
 
@@ -101,13 +98,7 @@ function setup() {
 
 function draw() {
   if (SHOW_DRAW) {
-    if (!waveFunction.collapsed) {
-      const newCell = waveFunction.observe();
-      drawCell(newCell);
-    } else {
-      setTimeout(reset, LOOP_DELAY);
-      noLoop();
-    }
+    waveFunction.collapsed ? reset() : drawCell(waveFunction.observe());
   } else {
     waveFunction.collapse();
     waveFunction.cells.forEach((cell) => drawCell(cell));
